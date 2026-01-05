@@ -9,6 +9,7 @@ import {
   HiOutlineLockClosed,
   HiOutlineMail,
   HiOutlineUserCircle,
+  HiOutlineUser,
 } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 
@@ -146,7 +147,7 @@ const Dashboard = () => {
     setShowContacts(next);
     setShowUsers(false);
     // Unselect the active sidebar section when opening contacts
-    setActiveId("");
+    // setActiveId("");
     if (next && contacts.length === 0) await fetchContactsList();
   };
 
@@ -164,9 +165,9 @@ const Dashboard = () => {
   const handleToggleUsers = async () => {
     const next = !showUsers;
     setShowUsers(next);
-    setShowContacts(false);
+    // setShowContacts(false);
     // Unselect the active sidebar section when opening users
-    setActiveId("");
+    // setActiveId("");
     if (next && users.length === 0) await fetchUsersList();
   };
 
@@ -326,6 +327,7 @@ const Dashboard = () => {
   const activeSection = (cmsData[activePage] || []).find(
     (s) => s.id === activeId
   );
+  console.log("Rendering Dashboard:", activeSection);
 
   return (
     <div className="flex min-h-screen bg-[#05080a] text-white p-6 gap-6 font-manrope">
@@ -367,7 +369,7 @@ const Dashboard = () => {
                 <div className="absolute right-0 mt-3 w-48 bg-[#0b1318] border border-gray-800 rounded-2xl shadow-2xl z-20 overflow-hidden py-1">
                   <button
                     onClick={() => {
-                      navigate("/forgot-password");
+                      navigate("/admin/change-password");
                       setIsDropdownOpen(false);
                     }}
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
@@ -382,6 +384,13 @@ const Dashboard = () => {
                   >
                     <HiOutlineMail className="text-lg text-cyan-500" />
                     <span>Contact</span>
+                  </button>
+                  <button
+                    onClick={handleToggleUsers}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <HiOutlineUser className="text-lg text-cyan-500" />
+                    <span>User</span>
                   </button>
 
                   <div className="border-t border-gray-800 my-1"></div>
@@ -398,7 +407,7 @@ const Dashboard = () => {
             )}
           </div>
         </header>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           {!showContacts && !showUsers && (
             <h1 className="text-2xl font-bold capitalize px-4">
               Editing:{" "}
@@ -425,113 +434,11 @@ const Dashboard = () => {
               Users
             </button>
           </div>
-        </div>
+        </div> */}
         <div className="flex-1 bg-[#0a0f14]/80 border border-gray-800 rounded-[40px] p-10 overflow-y-auto custom-scrollbar">
           {loading && Object.keys(cmsData).length === 0 ? (
             <div className="flex items-center justify-center h-full text-gray-500 animate-pulse">
               Syncing APIs...
-            </div>
-          ) : showContacts ? (
-            <div className="overflow-auto">
-              {contactsLoading ? (
-                <div className="text-gray-500">Loading contacts...</div>
-              ) : (
-                <table className="w-full table-auto text-left border-collapse">
-                  <thead>
-                    <tr className="text-sm text-gray-400">
-                      <th className="p-2">Name</th>
-                      <th className="p-2">Email</th>
-                      <th className="p-2">Phone</th>
-                      <th className="p-2">Services</th>
-                      <th className="p-2">Preferred</th>
-                      <th className="p-2">Created</th>
-                      <th className="p-2">Status</th>
-                      <th className="p-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {contacts.map((c) => (
-                      <tr key={c._id} className="border-t border-gray-800">
-                        <td className="p-2">
-                          {c.firstName || c.contactName || "-"}
-                        </td>
-                        <td className="p-2">{c.contactEmail || "-"}</td>
-                        <td className="p-2">{c.contactNumber || "-"}</td>
-                        <td className="p-2">
-                          {c.servicesNeeded && c.servicesNeeded.length
-                            ? c.servicesNeeded.join(", ")
-                            : "-"}
-                        </td>
-                        <td className="p-2">
-                          {c.preferredDate
-                            ? new Date(c.preferredDate).toLocaleDateString
-                              ? new Date(c.preferredDate).toLocaleDateString()
-                              : c.preferredDate
-                            : "-"}
-                        </td>
-                        <td className="p-2">
-                          {c.createdAt
-                            ? new Date(c.createdAt).toLocaleString()
-                            : "-"}
-                        </td>
-                        <td className="p-2">
-                          <select
-                            defaultValue={c.status}
-                            onChange={(e) =>
-                              handleUpdateContactStatus(c._id, e.target.value)
-                            }
-                            className="bg-black text-white text-sm rounded px-2 py-1"
-                          >
-                            <option value="new">new</option>
-                            <option value="pending">pending</option>
-                            <option value="closed">closed</option>
-                          </select>
-                        </td>
-                        <td className="p-2 flex gap-2">
-                          <button
-                            onClick={() => openEditContact(c)}
-                            className="px-3 py-1 rounded bg-yellow-400 text-black font-medium hover:shadow-md"
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => handleDeleteContact(c._id)}
-                            className="px-3 py-1 rounded bg-red-600 hover:bg-red-700"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          ) : showUsers ? (
-            <div className="overflow-auto">
-              <h3 className="text-cyan-400 mb-4">Users</h3>
-              <table className="w-full table-auto text-left border-collapse">
-                <thead>
-                  <tr className="text-sm text-gray-400">
-                    <th className="p-2">Email</th>
-                    <th className="p-2">Role</th>
-                    <th className="p-2">Verified</th>
-                    <th className="p-2">Created</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((u) => (
-                    <tr key={u._id} className="border-t border-gray-800">
-                      <td className="p-2">{u.email}</td>
-                      <td className="p-2">{u.role}</td>
-                      <td className="p-2">{u.verified ? "Yes" : "No"}</td>
-                      <td className="p-2">
-                        {new Date(u.createdAt).toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           ) : activeSection ? (
             <DynamicEditor
@@ -547,9 +454,9 @@ const Dashboard = () => {
 
           {/* Edit Contact Modal */}
           {showEditModal && editContact && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="fixed inset-0 top-0 left-0 z-50 flex items-center justify-center">
               <div
-                className="absolute inset-0 bg-black/60"
+                className="absolute inset-0 bg-white/10"
                 onClick={closeEditModal}
               ></div>
               <div className="bg-[#0b1318] rounded-2xl p-6 z-10 w-full max-w-2xl">
@@ -658,6 +565,127 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+
+        {showContacts && (
+          <div className="fixed top-0 left-0 overflow-auto flex h-full w-full justify-center items-center bg-[#0a0f14]/80 z-40 p-6 ">
+            <div
+              className="absolute top-6 right-6 text-gray-500 hover:text-white cursor-pointer  bg-black w-10 h-10 rounded-[50%] flex justify-center items-center"
+              onClick={handleToggleContacts}
+            >
+              <i class="fas fa-times"></i>
+            </div>
+            <div className="bg-[#0a0f14] border border-gray-800 rounded-[40px] p-10 overflow-y-auto custom-scrollbar">
+              {contactsLoading ? (
+                <div className="text-gray-500">Loading contacts...</div>
+              ) : (
+                <table className="w-full table-auto text-left border-collapse">
+                  <thead>
+                    <tr className="text-sm text-gray-400">
+                      <th className="p-2">Name</th>
+                      <th className="p-2">Email</th>
+                      <th className="p-2">Phone</th>
+                      <th className="p-2">Services</th>
+                      <th className="p-2">Preferred</th>
+                      <th className="p-2">Created</th>
+                      <th className="p-2">Status</th>
+                      <th className="p-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {contacts.map((c) => (
+                      <tr key={c._id} className="border-t border-gray-800">
+                        <td className="p-2">
+                          {c.firstName || c.contactName || "-"}
+                        </td>
+                        <td className="p-2">{c.contactEmail || "-"}</td>
+                        <td className="p-2">{c.contactNumber || "-"}</td>
+                        <td className="p-2">
+                          {c.servicesNeeded && c.servicesNeeded.length
+                            ? c.servicesNeeded.join(", ")
+                            : "-"}
+                        </td>
+                        <td className="p-2">
+                          {c.preferredDate
+                            ? new Date(c.preferredDate).toLocaleDateString
+                              ? new Date(c.preferredDate).toLocaleDateString()
+                              : c.preferredDate
+                            : "-"}
+                        </td>
+                        <td className="p-2">
+                          {c.createdAt
+                            ? new Date(c.createdAt).toLocaleString()
+                            : "-"}
+                        </td>
+                        <td className="p-2">
+                          <select
+                            defaultValue={c.status}
+                            onChange={(e) =>
+                              handleUpdateContactStatus(c._id, e.target.value)
+                            }
+                            className="bg-black text-white text-sm rounded px-2 py-1"
+                          >
+                            <option value="new">new</option>
+                            <option value="pending">pending</option>
+                            <option value="closed">closed</option>
+                          </select>
+                        </td>
+                        <td className="p-2 flex gap-2">
+                          <button
+                            onClick={() => openEditContact(c)}
+                            className="px-3 py-1 rounded bg-yellow-400 text-black font-medium hover:shadow-md"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => handleDeleteContact(c._id)}
+                            className="px-3 py-1 rounded bg-red-600 hover:bg-red-700"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        )}
+        {showUsers && (
+          <div className="fixed top-0 left-0 overflow-auto flex h-full w-full justify-center items-center bg-[#0a0f14]/80 z-40 p-6">
+            <div
+              className="absolute top-6 right-6 text-gray-500 hover:text-white cursor-pointer  bg-black w-10 h-10 rounded-[50%] flex justify-center items-center"
+              onClick={handleToggleContacts}
+            >
+              <i class="fas fa-times"></i>
+            </div>
+            <div className="bg-[#0a0f14] border border-gray-800 rounded-[40px] p-10 overflow-y-auto custom-scrollbar">
+              <h3 className="text-cyan-400 mb-4">Users</h3>
+              <table className="w-full table-auto text-left border-collapse">
+                <thead>
+                  <tr className="text-sm text-gray-400">
+                    <th className="p-2">Email</th>
+                    <th className="p-2">Role</th>
+                    <th className="p-2">Verified</th>
+                    <th className="p-2">Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((u) => (
+                    <tr key={u._id} className="border-t border-gray-800">
+                      <td className="p-2">{u.email}</td>
+                      <td className="p-2">{u.role}</td>
+                      <td className="p-2">{u.verified ? "Yes" : "No"}</td>
+                      <td className="p-2">
+                        {new Date(u.createdAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
