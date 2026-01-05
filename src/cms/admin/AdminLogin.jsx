@@ -19,6 +19,7 @@ const AdminLogin = () => {
   // --- NEW TIMER STATES ---
   const [timer, setTimer] = useState(0); 
   const [canResend, setCanResend] = useState(false);
+  const [otpSent, setOtpSent] = useState(true);
 
   const BASE_URL = API_BASE_URL;
 
@@ -40,6 +41,12 @@ const AdminLogin = () => {
     setTimer(60); // 1 minute
     setCanResend(false);
   };
+  const endTimer = () => {
+  setTimer(0);
+  setCanResend(true);
+  setOtpSent(false);
+};
+
 
   // STEP 1: Request OTP
   const handleVerifyEmail = async () => {
@@ -105,6 +112,7 @@ const AdminLogin = () => {
       if (response.ok) {
         localStorage.setItem("sessionToken", data.sessionToken);
         setStep(3);
+        endTimer(); // Stop timer on successful OTP verification
       } else {
         setError(data.message || "Invalid OTP");
       }
@@ -209,7 +217,7 @@ const AdminLogin = () => {
               </div>
               
               {/* --- UPDATED RESEND BUTTON SECTION --- */}
-              <button
+              {otpSent && (<button
                 onClick={handleResendOTP}
                 disabled={!canResend || loading}
                 className={`mt-2 font-manrope text-sm transition-colors ${
@@ -217,7 +225,7 @@ const AdminLogin = () => {
                 }`}
               >
                 {canResend ? "Resend OTP" : `Resend OTP in ${timer}s`}
-              </button>
+              </button>)}
             </div>
 
             {/* Password Field */}

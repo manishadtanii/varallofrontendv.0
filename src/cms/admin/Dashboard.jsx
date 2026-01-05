@@ -165,7 +165,7 @@ const Dashboard = () => {
   const handleToggleUsers = async () => {
     const next = !showUsers;
     setShowUsers(next);
-    // setShowContacts(false);
+    setShowContacts(false);
     // Unselect the active sidebar section when opening users
     // setActiveId("");
     if (next && users.length === 0) await fetchUsersList();
@@ -378,6 +378,14 @@ const Dashboard = () => {
                     <span>Forgot Password</span>
                   </button>
 
+                    <button
+                    onClick={handleToggleUsers}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
+                  >
+                    <HiOutlineUser className="text-lg text-cyan-500" />
+                    <span>User</span>
+                  </button>
+
                   <button
                     onClick={handleToggleContacts}
                     className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
@@ -385,13 +393,7 @@ const Dashboard = () => {
                     <HiOutlineMail className="text-lg text-cyan-500" />
                     <span>Contact</span>
                   </button>
-                  <button
-                    onClick={handleToggleUsers}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
-                  >
-                    <HiOutlineUser className="text-lg text-cyan-500" />
-                    <span>User</span>
-                  </button>
+                
 
                   <div className="border-t border-gray-800 my-1"></div>
 
@@ -572,7 +574,7 @@ const Dashboard = () => {
               className="absolute top-6 right-6 text-gray-500 hover:text-white cursor-pointer  bg-black w-10 h-10 rounded-[50%] flex justify-center items-center"
               onClick={handleToggleContacts}
             >
-              <i class="fas fa-times"></i>
+              <i className="fas fa-times"></i>
             </div>
             <div className="bg-[#0a0f14] border border-gray-800 rounded-[40px] p-10 overflow-y-auto custom-scrollbar">
               {contactsLoading ? (
@@ -655,9 +657,9 @@ const Dashboard = () => {
           <div className="fixed top-0 left-0 overflow-auto flex h-full w-full justify-center items-center bg-[#0a0f14]/80 z-40 p-6">
             <div
               className="absolute top-6 right-6 text-gray-500 hover:text-white cursor-pointer  bg-black w-10 h-10 rounded-[50%] flex justify-center items-center"
-              onClick={handleToggleContacts}
+              onClick={handleToggleUsers}
             >
-              <i class="fas fa-times"></i>
+              <i className="fas fa-times"></i>
             </div>
             <div className="bg-[#0a0f14] border border-gray-800 rounded-[40px] p-10 overflow-y-auto custom-scrollbar">
               <h3 className="text-cyan-400 mb-4">Users</h3>
