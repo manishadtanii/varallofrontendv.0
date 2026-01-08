@@ -27,7 +27,7 @@ const smartData = [
   },
   {
     title: "TVG Books",
-    desc: "Bookkeeping support services for court reporting and other professional industries.",
+    desc: "Book keeping support services for court reporting and other professional industries.",
     image: "smart-4.jpg",
     link: "/services/tvg-books"
   },
@@ -51,7 +51,7 @@ const smartData = [
   // },
   {
     title: "TVG Verify",
-    desc: "Let us ensure your hiring is secure with reliable background screening and compliance checks, powered by SmartHire.",
+    desc: "Let us ensure your hiring is secure with reliable background screening and compliance checks, powered by Smart Hire.",
     image: "smart-8.jpg",
     link: "/services/tvg-verify"
   },
