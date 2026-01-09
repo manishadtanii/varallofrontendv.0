@@ -8,44 +8,61 @@ import {
   HiOutlineEye,
 } from "react-icons/hi";
 
-const Trust = ({ sectionData, onSave }) => {
+const AllServices = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showReference, setShowReference] = useState(false);
   const mainFileRef = useRef(null);
 
   // State initialized with individual keys for absolute clarity
   const [content, setContent] = useState({
-    heading:
-      sectionData?.heading || "Experience That Performs. Support You Deserve.",
-    subtext:
-      sectionData?.subtext ||
-      "For court reporting firms that value reliability, accuracy, and confidentiality, our team delivers more than just services; we deliver peace of mind.",
+    heading: sectionData?.heading || "Services",
     // Card 1
-    c1_title:
-      sectionData?.c1_title ||
-      "Decades of expertise, led by Nancy Varallo. Teacher. Mentor. Industry Leader.",
-    c1_text: sectionData?.c1_text || "Learn More",
-    c1_link: sectionData?.c1_link || "/services",
+    c1_title: sectionData?.c1_title || "TVG Reporting",
+    c1_desc:
+      sectionData?.c1_desc ||
+      "Comprehensive agency management support focused on optimizing your day-to-day operations.",
+    c1_img: sectionData?.c1_img || "./smart-1.jpg",
+    c1_link: sectionData?.c1_link || "/services/tvg-management",
 
     // Card 2
-    c2_title:
-      sectionData?.c2_title ||
-      "Precision in every word. Because in law, details matter.",
-    c2_text: sectionData?.c2_text || "Learn More",
-    c2_link: sectionData?.c2_link || "/services",
+    c2_title: sectionData?.c2_title || "TVG Reporting",
+    c2_desc:
+      sectionData?.c2_desc ||
+      "Our nationwide network of court reporters and legal videographers is ready to support your firm wherever you need.",
+    c2_img: sectionData?.c2_img || "./smart-2.jpg",
+    c2_link: sectionData?.c2_link || "/services/tvg-reporting",
 
-    // St 1
-    st1_title: sectionData?.st1_title || "500+",
-    st1_dec: sectionData?.st1_dec || "Court reporting firms served",
-    // St 1
-    st2_title: sectionData?.st2_title || "40K+",
-    st2_dec: sectionData?.st2_dec || "Attorneys assisted by our team",
-    // St 1
-    st3_title: sectionData?.st3_title || "24+",
-    st3_dec: sectionData?.st3_dec || "Years in business",
-    // St 1
-    st4_title: sectionData?.st4_title || "2.5M+",
-    st4_dec: sectionData?.st4_dec || "Depositions Handled",
+    // Card 3
+    c3_title: sectionData?.c3_title || "TVG Stream",
+    c3_desc:
+      sectionData?.c3_desc ||
+      "Cutting-edge trial presentation and event A/V, with detail-focused on-site support.",
+    c3_img: sectionData?.c3_img || "./smart-3.jpg",
+    c3_link: sectionData?.c3_link || "/services/tvg-stream",
+
+    // Card 4
+    c4_title: sectionData?.c4_title || "TVG Books",
+    c4_desc:
+      sectionData?.c4_desc ||
+      "Book keeping support services for court reporting and other professional industries.",
+    c4_img: sectionData?.c4_img || "./smart-4.jpg",
+    c4_link: sectionData?.c4_link || "/services/tvg-books",
+
+    // Card 5
+    c5_title: sectionData?.c5_title || "TVG Connect",
+    c5_desc:
+      sectionData?.c5_desc ||
+      "Focused management services built for professional associations and organizations.",
+    c5_img: sectionData?.c5_img || "./smart-6.jpg",
+    c5_link: sectionData?.c5_link || "/services/tvg-connect",
+
+    // Card 6
+    c6_title: sectionData?.c6_title || "TVG Verify",
+    c6_desc:
+      sectionData?.c6_desc ||
+      "Let us ensure your hiring is secure with reliable background screening and compliance checks, powered by Smart Hire.",
+    c6_img: sectionData?.c6_img || "./smart-8.jpg",
+    c6_link: sectionData?.c6_link || "/services/tvg-verify",
   });
 
   const handleChange = (e) => {
@@ -120,7 +137,7 @@ const Trust = ({ sectionData, onSave }) => {
               }`}
             />
           </div>
-          <div className="flex flex-col gap-1">
+          {/*<div className="flex flex-col gap-1">
             <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
               Paragraph Text1
             </label>
@@ -153,21 +170,23 @@ const Trust = ({ sectionData, onSave }) => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
-              CTA Text
-            </label>
-            <input
-              disabled={!isEditing}
-              placeholder=""
-              name="ctaText"
-              value={content.ctaText}
-              onChange={handleChange}
-              className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${
-                isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
-              }`}
-            />
-          </div>
-          {/* <div className="grid grid-cols-2 gap-4">
+              <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+                CTA Text
+              </label>
+              <input
+                disabled={!isEditing}
+                placeholder=""
+                name="ctaText"
+                value={content.ctaText}
+                onChange={handleChange}
+                className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${
+                  isEditing
+                    ? "border-cyan-400"
+                    : "border-gray-800 text-gray-400"
+                }`}
+              />
+            </div>
+           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
                 Sub Section Title
@@ -239,7 +258,7 @@ const Trust = ({ sectionData, onSave }) => {
 
       {/* --- HARDCODED CARDS (2x2) --- */}
       <div className="">
-        <h1 className="mb-3">Decades of expertise</h1>
+        <h1 className="mb-3">Smart Slider Cards</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* CARD 1 */}
           <div
@@ -247,7 +266,7 @@ const Trust = ({ sectionData, onSave }) => {
               isEditing ? "border-cyan-400/30" : "border-gray-800"
             }`}
           >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
               <img
                 src={showReference ? "./ab-1.png" : content.c1_img}
                 className="w-full h-full object-cover"
@@ -263,33 +282,26 @@ const Trust = ({ sectionData, onSave }) => {
                   <HiOutlineUpload className="text-cyan-400" />
                 </label>
               )}
-            </div> */}
+            </div>
             <div className="flex flex-col gap-2 flex-1">
-              {/* <input
+              <input
                 disabled={!isEditing}
                 name="c1_title"
                 value={content.c1_title}
                 onChange={handleChange}
                 placeholder="Title"
                 className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              /> */}
+              />
               <textarea
                 disabled={!isEditing}
-                name="c1_title"
-                value={content.c1_title}
+                name="c1_desc"
+                value={content.c1_desc}
                 onChange={handleChange}
-                placeholder="Title"
+                placeholder="Desc"
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              <input
-                disabled={!isEditing}
-                name="c1_link"
-                value={content.c1_link}
-                onChange={handleChange}
-                placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              />
+              <input disabled={!isEditing} name="c1_link" value={content.c1_link} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none" />
             </div>
           </div>
 
@@ -299,7 +311,7 @@ const Trust = ({ sectionData, onSave }) => {
               isEditing ? "border-cyan-400/30" : "border-gray-800"
             }`}
           >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
               <img
                 src={showReference ? "./ab-2.png" : content.c2_img}
                 className="w-full h-full object-cover"
@@ -315,152 +327,38 @@ const Trust = ({ sectionData, onSave }) => {
                   <HiOutlineUpload className="text-cyan-400" />
                 </label>
               )}
-            </div> */}
+            </div>
             <div className="flex flex-col gap-2 flex-1">
-              {/* <input
+              <input
                 disabled={!isEditing}
                 name="c2_title"
                 value={content.c2_title}
                 onChange={handleChange}
                 placeholder="Title"
                 className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              /> */}
+              />
               <textarea
                 disabled={!isEditing}
                 name="c2_desc"
-                value={content.c2_title}
+                value={content.c2_desc}
                 onChange={handleChange}
-                placeholder="Title"
+                placeholder="Desc"
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              <input
-                disabled={!isEditing}
-                name="c2_link"
-                value={content.c2_link}
-                onChange={handleChange}
-                placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              />
+              <input disabled={!isEditing} name="c2_link" value={content.c2_link} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none" />
             </div>
           </div>
-        </div>
-      </div>
-      {/* --- Statics CARDS (2x2) --- */}
-      <div className="">
-        <h1 className="mb-3">Statics Cards</h1>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* CARD 1 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="st1_title"
-                value={content.st1_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <textarea
-                disabled={!isEditing}
-                name="st1_dec"
-                value={content.st1_dec}
-                onChange={handleChange}
-                placeholder="Title"
-                rows="2"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
-              {/* <input
-                disabled={!isEditing}
-                name="c1_link"
-                value={content.c1_link}
-                onChange={handleChange}
-                placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              /> */}
-            </div>
-          </div>
-          {/* CARD 2 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="st2_title"
-                value={content.st2_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <textarea
-                disabled={!isEditing}
-                name="st2_dec"
-                value={content.st2_dec}
-                onChange={handleChange}
-                placeholder="Title"
-                rows="2"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
-              {/* <input
-                disabled={!isEditing}
-                name="c1_link"
-                value={content.c1_link}
-                onChange={handleChange}
-                placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              /> */}
-            </div>
-          </div>
+
           {/* CARD 3 */}
           <div
             className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
               isEditing ? "border-cyan-400/30" : "border-gray-800"
             }`}
           >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
               <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
+                src={showReference ? "./ab-3.png" : content.c3_img}
                 className="w-full h-full object-cover"
                 alt=""
               />
@@ -469,49 +367,50 @@ const Trust = ({ sectionData, onSave }) => {
                   <input
                     type="file"
                     className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
+                    onChange={(e) => handleImageUpdate("c3_img", e)}
                   />
                   <HiOutlineUpload className="text-cyan-400" />
                 </label>
               )}
-            </div> */}
+            </div>
             <div className="flex flex-col gap-2 flex-1">
               <input
                 disabled={!isEditing}
-                name="st3_title"
-                value={content.st3_title}
+                name="c3_title"
+                value={content.c3_title}
                 onChange={handleChange}
                 placeholder="Title"
                 className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
               />
               <textarea
                 disabled={!isEditing}
-                name="st3_dec"
-                value={content.st3_dec}
+                name="c3_desc"
+                value={content.c3_desc}
                 onChange={handleChange}
-                placeholder="Title"
+                placeholder="Desc"
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              {/* <input
+              <input
                 disabled={!isEditing}
-                name="c1_link"
-                value={content.c1_link}
+                name="c3_link"
+                value={content.c3_link}
                 onChange={handleChange}
                 placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              /> */}
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none"
+              />
             </div>
           </div>
+
           {/* CARD 4 */}
           <div
             className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
               isEditing ? "border-cyan-400/30" : "border-gray-800"
             }`}
           >
-            {/* <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
               <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
+                src={showReference ? "/card-4.jpg" : content.c4_img}
                 className="w-full h-full object-cover"
                 alt=""
               />
@@ -520,38 +419,140 @@ const Trust = ({ sectionData, onSave }) => {
                   <input
                     type="file"
                     className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
+                    onChange={(e) => handleImageUpdate("c4_img", e)}
                   />
                   <HiOutlineUpload className="text-cyan-400" />
                 </label>
               )}
-            </div> */}
+            </div>
             <div className="flex flex-col gap-2 flex-1">
               <input
                 disabled={!isEditing}
-                name="st4_title"
-                value={content.st4_title}
+                name="c4_title"
+                value={content.c4_title}
                 onChange={handleChange}
                 placeholder="Title"
                 className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
               />
               <textarea
                 disabled={!isEditing}
-                name="st4_dec"
-                value={content.st4_dec}
+                name="c4_desc"
+                value={content.c4_desc}
                 onChange={handleChange}
-                placeholder="Title"
+                placeholder="Desc"
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              {/* <input
+              <input
                 disabled={!isEditing}
-                name="c1_link"
-                value={content.c1_link}
+                name="c4_link"
+                value={content.c4_link}
                 onChange={handleChange}
                 placeholder="Link"
-                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
-              /> */}
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none"
+              />
+            </div>
+          </div>
+          {/* CARD 5 */}
+          <div
+            className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
+              isEditing ? "border-cyan 500/30" : "border-gray-800"
+            }`}
+          >
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+              <img
+                src={showReference ? "/card-4.jpg" : content.c5_img}
+                className="w-full h-full object-cover"
+                alt=""
+              />
+              {isEditing && (
+                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleImageUpdate("c5_img", e)}
+                  />
+                  <HiOutlineUpload className="text-cyan-400" />
+                </label>
+              )}
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <input
+                disabled={!isEditing}
+                name="c5_title"
+                value={content.c5_title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
+              />
+              <textarea
+                disabled={!isEditing}
+                name="c5_desc"
+                value={content.c5_desc}
+                onChange={handleChange}
+                placeholder="Desc"
+                rows="2"
+                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
+              />
+              <input
+                disabled={!isEditing}
+                name="c5_link"
+                value={content.c5_link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none"
+              />
+            </div>
+          </div>
+          {/* CARD 6 */}
+          <div
+            className={`bg-[#0b1318] border rounded-2xl p-5 flex gap-5 ${
+              isEditing ? "border-cyan-400/30" : "border-gray-800"
+            }`}
+          >
+            <div className="relative w-28 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
+              <img
+                src={showReference ? "/card-4.jpg" : content.c6_img}
+                className="w-full h-full object-cover"
+                alt=""
+              />
+              {isEditing && (
+                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleImageUpdate("c6_img", e)}
+                  />
+                  <HiOutlineUpload className="text-cyan-400" />
+                </label>
+              )}
+            </div>
+            <div className="flex flex-col gap-2 flex-1">
+              <input
+                disabled={!isEditing}
+                name="c6_title"
+                value={content.c6_title}
+                onChange={handleChange}
+                placeholder="Title"
+                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
+              />
+              <textarea
+                disabled={!isEditing}
+                name="c6_desc"
+                value={content.c6_desc}
+                onChange={handleChange}
+                placeholder="Desc"
+                rows="2"
+                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
+              />
+              <input
+                disabled={!isEditing}
+                name="c6_link"
+                value={content.c6_link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none"
+              />
             </div>
           </div>
         </div>
@@ -560,4 +561,4 @@ const Trust = ({ sectionData, onSave }) => {
   );
 };
 
-export default Trust;
+export default AllServices;

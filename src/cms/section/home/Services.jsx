@@ -127,7 +127,7 @@ const Services = ({ sectionData, onSave }) => {
       </div>
 
       {/* --- MAIN SECTION --- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
@@ -146,22 +146,7 @@ const Services = ({ sectionData, onSave }) => {
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
-              Sub Heading
-            </label>
-            <input
-              disabled={!isEditing}
-              name="subSecTitle"
-              value={content.subSecTitle}
-              placeholder=""
-              onChange={handleChange}
-              className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${
-                isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
-              }`}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
-              Paragraph Text
+              Paragraph Text1
             </label>
             <textarea
               disabled={!isEditing}
@@ -175,7 +160,40 @@ const Services = ({ sectionData, onSave }) => {
               }`}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+              Paragraph Text2
+            </label>
+            <textarea
+              disabled={!isEditing}
+              name="subtext"
+              value={content.subtext2}
+              placeholder=""
+              onChange={handleChange}
+              rows="3"
+              className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${
+                isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+              }`}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+              <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+                CTA Text
+              </label>
+              <input
+                disabled={!isEditing}
+                placeholder=""
+                name="ctaText"
+                value={content.ctaText}
+                onChange={handleChange}
+                className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${
+                  isEditing
+                    ? "border-cyan-400"
+                    : "border-gray-800 text-gray-400"
+                }`}
+              />
+            </div>
+          {/* <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
                 Sub Section Title
@@ -210,10 +228,10 @@ const Services = ({ sectionData, onSave }) => {
                 }`}
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
-        <div className="relative">
+        {/* <div className="relative">
           <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
             Main Image
           </label>
@@ -242,7 +260,7 @@ const Services = ({ sectionData, onSave }) => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* --- HARDCODED CARDS (2x2) --- */}

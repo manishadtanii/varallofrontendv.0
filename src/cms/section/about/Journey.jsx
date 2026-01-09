@@ -15,27 +15,28 @@ const Capabilities = ({ sectionData, onSave }) => {
 
   // State initialized with individual keys for absolute clarity
   const [content, setContent] = useState({
+    heading: sectionData?.heading || "The Varallo Group’s Journey",
+    subtext:
+      sectionData?.subtext ||
+      "A family name, a lifelong commitment to excellence.",
     // Card 1
-    c1_title: sectionData?.c1_title || "Nationwide Reach. Local Expertise.",
-    c1_desc: sectionData?.c1_desc || "Trusted with skilled professionals across all 50 states, we offer personalized court reporting and legal services backed by decades of regional expertise.",
-    c1_img: sectionData?.c1_img || "./ab-1.png",
-    c1_cta_text: sectionData?.c1_cta_text || "Learn More",
-    c1_cta_link: sectionData?.c1_cta_link || "/services",
+    c1_title: sectionData?.c1_title || "Our Legacy",
+    c1_desc:
+      sectionData?.c1_desc ||
+      "Founded in 2001 with a clear mission to deliver exceptional court reporting and legal support services rooted in professionalism, reliability, and personal attention, The Varallo Group builds on a family legacy dating back to 1937. For nearly 100 years, the Varallo name has been synonymous with excellence in the field.",
+    c1_img: sectionData?.c1_img || "./our-legacy.jpg",
     // Card 2
-    c2_title: sectionData?.c2_title || "Confidential & Reliable",
-    c2_desc: 
-      sectionData?.c2_desc || "We recognize the trust you’ve placed in us, and we’re dedicated to protecting the confidentiality of your private company information.",
-    c2_img: sectionData?.c2_img || "./ab-2.png",
-    c2_cta_text: sectionData?.c2_cta_text || "Learn More",
-    c2_cta_link: sectionData?.c2_cta_link || "/services",
+    c2_title: sectionData?.c2_title || "Our Commitment",
+    c2_desc:
+      sectionData?.c2_desc ||
+      "From the start, The Varallo Group set out to be a different kind of court reporting firm. We’ve assembled a team of experts dedicated to upholding the highest standards of accuracy, responsiveness, and service. Whether handling routine depositions, high-profile cases, administration or communications, we bring the same precision, discretion, and care to every client. Our founder, Nancy Varallo, a lifelong court reporter and respected industry leader, shaped the company’s client-first culture. Under her guidance, The Varallo Group has grown into a trusted partner for court reporting firms, government agencies, and organizations nationwide.",
+    c2_img: sectionData?.c2_img || "./our-commitment.jpg",
     // Card 3
-    c3_title: sectionData?.c3_title || "People First",
+    c3_title: sectionData?.c3_title || "Our Future",
     c3_desc:
       sectionData?.c3_desc ||
-      "It’s not just what we do, it’s about the people we serve. Our dedicated team brings genuine passion to help your business thrive and succeed.",
-    c3_img: sectionData?.c3_img || "./ab-3.png",
-      c3_cta_text: sectionData?.c3_cta_text || "Learn More",
-    c3_cta_link: sectionData?.c3_cta_link || "/services",
+      "What truly sets us apart is the people behind the name. Our team is loyal, experienced, and empowered to deliver results. We continuously invest in technology, talent, and training to stay ahead in a rapidly evolving legal landscape — because our clients rely on us to get it right, every time. At The Varallo Group, we combine a proud legacy of excellence with forward-thinking innovation to meet tomorrow’s challenges.",
+    c3_img: sectionData?.c3_img || "./our-future.jpg",
   });
 
   const handleChange = (e) => {
@@ -91,7 +92,96 @@ const Capabilities = ({ sectionData, onSave }) => {
           )}
         </div>
       </div>
+      {/* --- MAIN SECTION --- */}
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+              Main Heading
+            </label>
+            <input
+              disabled={!isEditing}
+              name="heading"
+              value={content.heading}
+              placeholder=""
+              onChange={handleChange}
+              className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${
+                isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+              }`}
+            />
+          </div>
+          {/* <div className="flex flex-col gap-1">
+            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Sub Heading</label>
+            <input disabled={!isEditing} name="heading" value={content.subheading} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
+          </div> */}
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+              Paragraph Text
+            </label>
+            <textarea
+              disabled={!isEditing}
+              name="subtext"
+              value={content.subtext}
+              placeholder=""
+              onChange={handleChange}
+              rows="3"
+              className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${
+                isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+              }`}
+            />
+          </div>
+          {/* <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+                CTA Text
+              </label>
+              <input
+                disabled={!isEditing}
+                placeholder=""
+                name="ctaText"
+                value={content.ctaText}
+                onChange={handleChange}
+                className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${
+                  isEditing
+                    ? "border-cyan-400"
+                    : "border-gray-800 text-gray-400"
+                }`}
+              />
+            </div>
+          </div> */}
+        </div>
 
+        {/* <div className="relative ">
+          <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">
+            Main Image
+          </label>
+          <div
+            onClick={() => isEditing && mainFileRef.current.click()}
+            className={`relative border-2 border-dashed rounded-2xl h-full min-h-[200px] max-h-[320px] flex items-center justify-center bg-black/20 overflow-hidden ${
+              isEditing
+                ? "border-cyan-500 cursor-pointer group"
+                : "border-gray-800"
+            }`}
+          >
+            <input
+              type="file"
+              ref={mainFileRef}
+              onChange={(e) => handleImageUpdate("mainImage", e)}
+              className="hidden"
+            />
+            <img
+              src={showReference ? "./hero.png" : content.mainImage}
+              className="max-h-full object-contain p-2"
+              alt="Hero"
+            />
+            {isEditing && (
+              <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <HiOutlineUpload className="text-cyan-400 text-2xl" />
+              </div>
+            )}
+          </div>
+        </div> */}
+      </div>
       {/* --- HARDCODED CARDS (2x2) --- */}
       <div className="">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -136,8 +226,22 @@ const Capabilities = ({ sectionData, onSave }) => {
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              <input disabled={!isEditing} name="c1_cta_text" value={content.c1_cta_text} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <input disabled={!isEditing} name="c1_cta_link" value={content.c1_cta_link} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
+              <input
+                disabled={!isEditing}
+                name="c1_cta_text"
+                value={content.c1_cta_text}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
+              <input
+                disabled={!isEditing}
+                name="c1_cta_link"
+                value={content.c1_cta_link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
             </div>
           </div>
 
@@ -182,8 +286,22 @@ const Capabilities = ({ sectionData, onSave }) => {
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              <input disabled={!isEditing} name="c1_cta_text" value={content.c1_cta_text} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <input disabled={!isEditing} name="c1_cta_link" value={content.c1_cta_link} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
+              <input
+                disabled={!isEditing}
+                name="c1_cta_text"
+                value={content.c1_cta_text}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
+              <input
+                disabled={!isEditing}
+                name="c1_cta_link"
+                value={content.c1_cta_link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
             </div>
           </div>
 
@@ -228,8 +346,22 @@ const Capabilities = ({ sectionData, onSave }) => {
                 rows="2"
                 className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
               />
-              <input disabled={!isEditing} name="c3_cta_text" value={content.c3_cta_text} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <input disabled={!isEditing} name="c3_cta_link" value={content.c3_cta_link} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
+              <input
+                disabled={!isEditing}
+                name="c3_cta_text"
+                value={content.c3_cta_text}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
+              <input
+                disabled={!isEditing}
+                name="c3_cta_link"
+                value={content.c3_cta_link}
+                onChange={handleChange}
+                placeholder="Link"
+                className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400"
+              />
             </div>
           </div>
 

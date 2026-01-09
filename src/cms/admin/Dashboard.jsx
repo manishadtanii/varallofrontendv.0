@@ -17,6 +17,18 @@ import Services from "../section/home/Services";
 import Trust from "../section/home/Trust";
 import Capabilities from "../section/home/Capabilities";
 import Testimonials from "../section/home/Testimonials";
+import AboutHero from "../section/about/Hero";
+import Vision from "../section/about/Vision";
+import Mission from "../section/about/Mission";
+import Journey from "../section/about/Journey";
+import Founder from "../section/about/Founder";
+import Team from "../section/about/Team";
+import TestimonialsAbout from "../section/about/Testimonials";
+import ASupportCompany from "../section/service/ASupportCompany";
+import AllServices from "../section/service/AllServices";
+import StartYourJourney from "../section/contact/StartYourJourney";
+import ContactUs from "../section/contact/ContactUs";
+
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("home");
   const [activeId, setActiveId] = useState("Hero");
@@ -64,6 +76,83 @@ const Dashboard = () => {
       case "Testimonials":
         return (
           <Testimonials
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "About-Hero":
+        return (
+          <AboutHero
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Vision":
+        return (
+          <Vision
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Mission":
+        return (
+          <Mission
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Journey":
+        return (
+          <Journey
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Founder":
+        return (
+          <Founder
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Team":
+        return (
+          <Team
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Testimonials-About":
+        return (
+          <TestimonialsAbout
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "A Support Company":
+        return (
+          <ASupportCompany
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "All Service":
+        return (
+          <AllServices
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Start Your Journey":
+        return (
+          <StartYourJourney
+            sectionData={activeSectionData}
+            onSave={handleUpdateSection}
+          />
+        );
+      case "Contact Us":
+        return (
+          <ContactUs
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
           />
@@ -118,7 +207,7 @@ const Dashboard = () => {
               >
                 <div className="flex items-center gap-3">
                   <HiOutlineHome className="text-xl" />
-                  <span className="text-sm font-bold uppercase">Homepage</span>
+                  <span className="text-sm font-bold uppercase">Home</span>
                 </div>
                 {openMenu === "home" ? <HiChevronDown /> : <HiChevronRight />}
               </button>
@@ -140,6 +229,133 @@ const Dashboard = () => {
                       }}
                       className={`text-left px-4 py-2 text-xs font-medium transition-all ${
                         activeId === sec && activePage === "home"
+                          ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
+                          : "text-gray-500 hover:text-white"
+                      }`}
+                    >
+                      {sec}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Aboutpage Toggle */}
+            <div className="mb-2">
+              <button
+                onClick={() => toggle("about")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl border ${
+                  activePage === "about"
+                    ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                    : "text-gray-400 border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <HiOutlineHome className="text-xl" />
+                  <span className="text-sm font-bold uppercase">About</span>
+                </div>
+                {openMenu === "about" ? <HiChevronDown /> : <HiChevronRight />}
+              </button>
+              {openMenu === "about" && (
+                <div className="ml-9 mt-2 flex flex-col gap-1 border-l border-gray-800">
+                  {[
+                    "About-Hero",
+                    "Vision",
+                    "Mission",
+                    "Journey",
+                    "Founder",
+                    "Team",
+                    "Testimonials",
+                  ].map((sec) => (
+                    <button
+                      key={sec}
+                      onClick={() => {
+                        setActivePage("about");
+                        setActiveId(sec);
+                      }}
+                      className={`text-left px-4 py-2 text-xs font-medium transition-all ${
+                        activeId === sec && activePage === "about"
+                          ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
+                          : "text-gray-500 hover:text-white"
+                      }`}
+                    >
+                      {sec}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Servicepage Toggle */}
+            <div className="mb-2">
+              <button
+                onClick={() => toggle("service")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl border ${
+                  activePage === "service"
+                    ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                    : "text-gray-400 border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <HiOutlineHome className="text-xl" />
+                  <span className="text-sm font-bold uppercase">Service</span>
+                </div>
+                {openMenu === "service" ? <HiChevronDown /> : <HiChevronRight />}
+              </button>
+              {openMenu === "service" && (
+                <div className="ml-9 mt-2 flex flex-col gap-1 border-l border-gray-800">
+                  {[
+                    "A Support Company",
+                    "All Service",
+                    "Testimonials",
+                  ].map((sec) => (
+                    <button
+                      key={sec}
+                      onClick={() => {
+                        setActivePage("service");
+                        setActiveId(sec);
+                      }}
+                      className={`text-left px-4 py-2 text-xs font-medium transition-all ${
+                        activeId === sec && activePage === "service"
+                          ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
+                          : "text-gray-500 hover:text-white"
+                      }`}
+                    >
+                      {sec}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+              {/* Contact page Toggle */}
+            <div className="mb-2">
+              <button
+                onClick={() => toggle("contact")}
+                className={`w-full flex items-center justify-between p-3 rounded-xl border ${
+                  activePage === "contact"
+                    ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
+                    : "text-gray-400 border-transparent"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <HiOutlineHome className="text-xl" />
+                  <span className="text-sm font-bold uppercase">Contact</span>
+                </div>
+                {openMenu === "contact" ? <HiChevronDown /> : <HiChevronRight />}
+              </button>
+              {openMenu === "contact" && (
+                <div className="ml-9 mt-2 flex flex-col gap-1 border-l border-gray-800">
+                  {[
+                    "Start Your Journey",
+                    "Contact Us",
+                  ].map((sec) => (
+                    <button
+                      key={sec}
+                      onClick={() => {
+                        setActivePage("contact");
+                        setActiveId(sec);
+                      }}
+                      className={`text-left px-4 py-2 text-xs font-medium transition-all ${
+                        activeId === sec && activePage === "contact"
                           ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
                           : "text-gray-500 hover:text-white"
                       }`}
