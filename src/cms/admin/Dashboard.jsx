@@ -691,12 +691,12 @@ const Dashboard = () => {
               )}
             </div>
 
- <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1 mt-5 px-2">
+ {/* <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1 mt-5 px-2">
               Service Details
-            </p>
+            </p> */}
 
             {/* Management Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("management")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -744,9 +744,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Stream Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("stream")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -794,9 +794,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Books Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("books")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -844,9 +844,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Connect Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("connect")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -894,9 +894,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Verify Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("verify")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -944,9 +944,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Reporting Toggle */}
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <button
                 onClick={() => toggle("reporting")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
@@ -994,7 +994,7 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </div> */}
 
             {/* Media Library Button */}
             <div className="mt-8 pt-6 border-t border-gray-800">
