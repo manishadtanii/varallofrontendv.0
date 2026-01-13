@@ -2,13 +2,13 @@
 // CENTRALIZED API SERVICE - All Backend APIs in One File
 // ============================================================================
 
-// export const API_BASE_URL = 
-//   import.meta.env.VITE_FRONTEND_URL || 
-//   import.meta.env.VITE_API_BASE || 
-//   import.meta.env.VITE_BACKEND_URL || 
-//   'https://backendcms-oi8n.onrender.com/api';
+export const API_BASE_URL = 
+  import.meta.env.VITE_FRONTEND_URL || 
+  import.meta.env.VITE_API_BASE || 
+  import.meta.env.VITE_BACKEND_URL || 
+  'https://varalobackendv-0.onrender.com';
 
-export const API_BASE_URL = 'http://localhost:3000/api';
+// export const API_BASE_URL = 'http://localhost:3000/api';
 
 // ============================================================================
 // PAGE APIs - Fetch Pages & Sections
