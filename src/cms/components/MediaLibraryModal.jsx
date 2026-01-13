@@ -5,6 +5,7 @@ import {
   HiOutlineSearch,
   HiOutlineUpload,
 } from "react-icons/hi";
+import { API_BASE_URL } from "../../services/apiService";
 
 /**
  * MediaLibraryModal Component
@@ -118,7 +119,7 @@ const MediaLibraryModal = ({ isOpen, onClose, onSelectImage, mode = "view", onIm
   const fetchMediaLibrary = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/upload/media/library", {
+      const response = await fetch( `${API_BASE_URL}/upload/media/library`, {
         method: "GET",
         credentials: "include",
       });

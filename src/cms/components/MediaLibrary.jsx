@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { HiOutlineX, HiOutlineFolder, HiOutlineSearch, HiOutlineDownload } from "react-icons/hi";
+import { API_BASE_URL } from "../../services/apiService";
 
 const MediaLibrary = ({ isOpen, onClose, onSelectImage }) => {
   const [images, setImages] = useState([]);
@@ -22,7 +23,7 @@ const MediaLibrary = ({ isOpen, onClose, onSelectImage }) => {
   const fetchMediaLibrary = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:3000/api/upload/media/library", {
+      const response = await fetch( `${API_BASE_URL}/upload/media/library`, {
         method: "GET",
         credentials: "include",
       });
