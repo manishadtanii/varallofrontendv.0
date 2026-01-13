@@ -4,7 +4,7 @@ import {
   HiOutlineUpload,
   HiOutlineSave,
   HiOutlinePencilAlt,
-  HiOutlineLockClosed,
+  HiOutlineX,
   HiOutlineEye,
 } from "react-icons/hi";
 
@@ -62,6 +62,37 @@ const WhatWeOffer = ({ sectionData, onSave }) => {
     setContent((prev) => ({ ...prev, [key]: url, [`${key}File`]: file }));
   };
 
+  const handleCancel = () => {
+    setContent({
+      heading: sectionData?.heading || "What We Offer",
+      c1_title:
+        sectionData?.c1_title ||
+        "End-to-End Scheduling & Communication Management",
+      c1_desc:
+        sectionData?.c1_desc ||
+        "We handle scheduling, resource calendar coordination, email monitoring, and phone answering, ensuring your agency runs smoothly and stays responsive. We are more than an answering service. We have the skills needed to answer questions the first time they are asked.",
+      c1_img: sectionData?.c1_img || "./wwo-icon/m1.png",
+      c2_title:
+        sectionData?.c2_title || "Meticulous Transcript & Exhibit Processing",
+      c2_desc:
+        sectionData?.c2_desc ||
+        "From accurate transcript formatting to exhibit marking, printing, binding, and final delivery, we manage it all with precision and speed.",
+      c2_img: sectionData?.c2_img || "./wwo-icon/m1.png",
+      c3_title: sectionData?.c3_title || "Streamlined Invoicing & Collections",
+      c3_desc:
+        sectionData?.c3_desc ||
+        "Get paid on time with professional invoice generation, client billing follow-ups, and efficient collections support.",
+      c3_img: sectionData?.c3_img || "./wwo-icon/m1.png",
+      c4_title: sectionData?.c4_title || "Accurate Payroll & Bookkeeping",
+      c4_desc:
+        sectionData?.c4_desc ||
+        "We process reporter payments and manage day-to-day bookkeeping, helping you maintain financial clarity and control.",
+      c4_img: sectionData?.c4_img || "./wwo-icon/m1.png",
+    });
+    setIsEditing(false);
+    toast.success("Changes discarded");
+  };
+
   return (
     <div className="flex flex-col gap-8 font-manrope">
       <Toaster />
@@ -74,27 +105,32 @@ const WhatWeOffer = ({ sectionData, onSave }) => {
         </div>
 
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border ${
-              isEditing
-                ? "bg-gray-800 border-gray-700 text-white"
-                : "bg-cyan-500 text-black border-cyan-400"
-            }`}
-          >
-            {isEditing ? <HiOutlineLockClosed /> : <HiOutlinePencilAlt />}
-            {isEditing ? "LOCK" : "EDIT"}
-          </button>
-          {isEditing && (
+          {!isEditing ? (
             <button
-              onClick={() => {
-                onSave(content);
-                setIsEditing(false);
-              }}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              onClick={() => setIsEditing(true)}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-cyan-500 text-black border-cyan-400`}
             >
-              <HiOutlineSave /> SAVE
+              <HiOutlinePencilAlt />
+              EDIT
             </button>
+          ) : (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+              >
+                <HiOutlineX /> CANCEL
+              </button>
+              <button
+                onClick={() => {
+                  onSave(content);
+                  setIsEditing(false);
+                }}
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              >
+                <HiOutlineSave /> SAVE
+              </button>
+            </>
           )}
         </div>
       </div>

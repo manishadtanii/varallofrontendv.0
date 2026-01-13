@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import toast, {Toaster} from "react-hot-toast";
-import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineLockClosed, HiOutlineEye } from "react-icons/hi";
+import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineEye } from "react-icons/hi";
 
 const ServiceOverview = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -33,6 +33,18 @@ const ServiceOverview = ({ sectionData, onSave }) => {
     setContent(prev => ({ ...prev, [key]: url, [`${key}File`]: file }));
   };
 
+  const handleCancel = () => {
+    setContent({
+      heading: sectionData?.heading || "Service Overview",
+      subHeading: sectionData?.subHeading || "Proven Experience Delivering the Efficiency You Need",
+      pera1: sectionData?.pera1 || "Managing a court reporting agency means balancing client expectations, reporter coordination, billing cycles, and deadlines, all while keeping your firm's reputation. That's where TVG Management comes in. We serve as your dependable operational partner, delivering customized administrative support designed specifically for court reporting firms.",
+      pera2: sectionData?.pera2 || "Whether you're scaling your business, dealing with staff shortages, or simply looking to free up time for strategic growth, our experienced team is here to help. We take care of the behind-the-scenes so you can stay focused on delivering exceptional service to your clients.",
+      image: sectionData?.image || "./services/management-over.png",
+    });
+    setIsEditing(false);
+    toast.success("Changes discarded");
+  };
+
   return (
     <div className="flex flex-col gap-8 font-manrope">
       <Toaster />
@@ -44,14 +56,29 @@ const ServiceOverview = ({ sectionData, onSave }) => {
         </div>
         
         <div className="flex gap-3">
-          <button onClick={() => setIsEditing(!isEditing)} className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border ${isEditing ? 'bg-gray-800 border-gray-700 text-white' : 'bg-cyan-500 text-black border-cyan-400'}`}>
-            {isEditing ? <HiOutlineLockClosed /> : <HiOutlinePencilAlt />}
-            {isEditing ? "LOCK" : "EDIT"}
-          </button>
-          {isEditing && (
-            <button onClick={() => { onSave(content); setIsEditing(false); }} className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg">
-              <HiOutlineSave /> SAVE
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-cyan-500 text-black border-cyan-400`}
+            >
+              <HiOutlinePencilAlt />
+              EDIT
             </button>
+          ) : (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+              >
+                <HiOutlineX /> CANCEL
+              </button>
+              <button
+                onClick={() => { onSave(content); setIsEditing(false); }}
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              >
+                <HiOutlineSave /> SAVE
+              </button>
+            </>
           )}
         </div>
       </div>

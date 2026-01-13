@@ -9,18 +9,16 @@ import Form from "./FormSubmit";
 const ContactUs = ({ data }) => {
   if (!data) return null;
   console.log("ContactUs data:", data);
-  const { heading, subHeading, infoCard, map } = data;
+  const { heading, subHeading, infoCard, map, emailSchedulingText, emailScheduling, emailProductionText, emailProduction, emailInvoicingText, emailInvoicing, emailVideoText, emailVideo, emailMarketingText, emailMarketing, emailGeneralText, emailGeneral } = data;
   const [open, setOpen] = useState(false);
 
   const services = [
-    { name: "Scheduling", email: "schedule@thevarallogroup.com" },
-    { name: "Production", email: "production@thevarallogroup.com" },
-    { name: "Invoicing", email: "invoices@thevarallogroup.com" },
-    { name: "Video", email: "video@thevarallogroup.com" },
-    { name: "Marketing", email: "cedar@thevarallogroup.com" },
-    { name: "General Inquiries", email: "info@thevarallogroup.com" },
-    // { name: "Technical Help", email: "tech@example.com" },
-    // { name: "Feedback", email: "feedback@example.com" },
+    { name: emailSchedulingText || "Scheduling", email: emailScheduling || "schedule@thevarallogroup.com" },
+    { name: emailProductionText || "Production", email: emailProduction || "production@thevarallogroup.com" },
+    { name: emailInvoicingText || "Invoicing", email: emailInvoicing || "invoices@thevarallogroup.com" },
+    { name: emailVideoText || "Video", email: emailVideo || "video@thevarallogroup.com" },
+    { name: emailMarketingText || "Marketing", email: emailMarketing || "cedar@thevarallogroup.com" },
+    { name: emailGeneralText || "General Inquiries", email: emailGeneral || "info@thevarallogroup.com" },
   ];
   const options = [
      { value: "Court Reporter", label: "Court Reporter" },
@@ -164,13 +162,12 @@ const ContactUs = ({ data }) => {
                             transition={{ duration: 0.3 }}
                             className="absolute bg-white text-gray-800 shadow-lg rounded-lg mt-3 w-56 z-20 border"
                           >
-                            {infoCard.contactDetails[2]['services'].map((service, index) => (
+                            {services.map((service, index) => (
                               <li
                                 key={index}
                                 className="px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer transition"
                               >
                                 <a
-                                  // href={`mailto:${service.email}`}
                                   href={`mailto:${service.email?.trim()}`}
                                   target="_blank"
                                   rel="noopener noreferrer"

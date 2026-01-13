@@ -43,7 +43,7 @@ function NextArrow(props) {
   const { onClick } = props;
   return (
     <button
-      className="absolute -bottom-14  left-1/2 transform translate-x-6 bg-btn hover:bg-blue-600 text-black  rounded-full"
+      className="absolute top-1/2 -right-12 transform -translate-y-1/2 bg-btn hover:bg-blue-600 text-white rounded-full p-3 z-10"
       onClick={onClick}
     >
       <Arrow customClass="" />
@@ -55,7 +55,7 @@ function PrevArrow(props) {
   const { onClick } = props;
   return (
     <button
-      className="absolute -bottom-14 left-1/2 transform -translate-x-12 bg-btn hover:bg-gray-300 text-black  rounded-full"
+      className="absolute top-1/2 -left-12 transform -translate-y-1/2 bg-btn hover:bg-gray-300 text-white rounded-full p-3 z-10"
       onClick={onClick}
     >
       <Arrow customClass="rotate-180" />
@@ -79,8 +79,8 @@ const Testimonials = ({ data }) => {
     centerPadding: "0px",
     autoplay: true,
     autoplaySpeed: 3000,
-    // nextArrow: <NextArrow />,
-    // prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
     responsive: [
       
       {

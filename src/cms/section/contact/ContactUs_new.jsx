@@ -1,39 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import toast, {Toaster} from "react-hot-toast";
-import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineEye, HiOutlineViewGridAdd } from "react-icons/hi";
+import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineEye } from "react-icons/hi";
 
-const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
+const ContactUs = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showReference, setShowReference] = useState(false);
   const mainFileRef = useRef(null);
 
   console.log("📄 Contact Us sectionData:", sectionData);
-
-  // Listen for image selection from MediaLibrary
-  useEffect(() => {
-    const handleImageSelected = (event) => {
-      const { fieldName, imageUrl } = event.detail;
-      
-      if (fieldName === "linkedinIcon") {
-        console.log("✅ LinkedIn icon selected:", imageUrl);
-        setContent((prev) => ({
-          ...prev,
-          linkedinIcon: imageUrl,
-        }));
-        toast.success("LinkedIn icon loaded!");
-      } else if (fieldName === "faceBookIcon") {
-        console.log("✅ Facebook icon selected:", imageUrl);
-        setContent((prev) => ({
-          ...prev,
-          faceBookIcon: imageUrl,
-        }));
-        toast.success("Facebook icon loaded!");
-      }
-    };
-
-    window.addEventListener("imageSelected", handleImageSelected);
-    return () => window.removeEventListener("imageSelected", handleImageSelected);
-  }, []);
   
   // Helper: normalize incoming sectionData into component content shape
   const buildContentFromSection = (sd = {}) => {
@@ -43,35 +17,36 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
     const socialLinks = Array.isArray(infoCard.socialLinks) ? infoCard.socialLinks : [];
     const formData = sd.formData || {};
     const map = sd.map || {};
+    const services = Array.isArray(contactDetails[2]?.services) ? contactDetails[2].services : [];
 
     // Extract address and phone from contactDetails
     const addressText = contactDetails[0]?.value || "34 Grafton Street, Suite 2 Millbury, MA 01527";
     const callText = contactDetails[1]?.value || "508.753.9282";
 
-    // Extract email services directly from sd (from the response)
-    const emailSchedulingText = sd.emailSchedulingText || "Scheduling";
-    const emailScheduling = sd.emailScheduling || "schedule@thevarallogroup.com";
-    const emailProductionText = sd.emailProductionText || "Production";
-    const emailProduction = sd.emailProduction || "production@thevarallogroup.com";
-    const emailInvoicingText = sd.emailInvoicingText || "Invoicing";
-    const emailInvoicing = sd.emailInvoicing || "invoices@thevarallogroup.com";
-    const emailVideoText = sd.emailVideoText || "Video";
-    const emailVideo = sd.emailVideo || "video@thevarallogroup.com";
-    const emailMarketingText = sd.emailMarketingText || "Marketing";
-    const emailMarketing = sd.emailMarketing || "cedar@thevarallogroup.com";
-    const emailGeneralText = sd.emailGeneralText || "General Inquiries";
-    const emailGeneral = sd.emailGeneral || "info@thevarallogroup.com";
+    // Extract email services
+    const emailSchedulingText = services[0]?.label || "Scheduling";
+    const emailScheduling = services[0]?.value || "schedule@thevarallogroup.com";
+    const emailProductionText = services[1]?.label || "Production";
+    const emailProduction = services[1]?.value || "production@thevarallogroup.com";
+    const emailInvoicingText = services[2]?.label || "Invoicing";
+    const emailInvoicing = services[2]?.value || "invoices@thevarallogroup.com";
+    const emailVideoText = services[3]?.label || "Video";
+    const emailVideo = services[3]?.value || "video@thevarallogroup.com";
+    const emailMarketingText = services[4]?.label || "Marketing";
+    const emailMarketing = services[4]?.value || "cedar@thevarallogroup.com";
+    const emailGeneralText = services[5]?.label || "General Inquiries";
+    const emailGeneral = services[5]?.value || "info@thevarallogroup.com";
 
     return {
       heading: sd.heading || "Contact Us",
-      desc: sd.desc || sd.subHeading || "Reach out today, we'll map the way forward with clear strategies and reliable assistance.",
-      headingSchedule: sd.headingSchedule || formData.subHeading || "Schedule a deposition",
-      descSchedule: sd.descSchedule || formData.description || "Once you submit your request, we'll send a confirmation email within 24 hours. If you haven't received it by then, please contact our office to confirm we've received your scheduling request.",
-      headingSidebar: sd.headingSidebar || infoCard.title || "You tell us. We Listen.",
-      descSidebar: sd.descSidebar || infoCard.description || "Rely on our team to help your business succeed.",
-      addressText: sd.addressText || addressText,
-      addressLink: sd.addressLink || "https://maps.google.com/",
-      callText: sd.callText || callText,
+      desc: sd.subHeading || "Reach out today, we'll map the way forward with clear strategies and reliable assistance.",
+      headingSchedule: formData.subHeading || "Schedule a deposition",
+      descSchedule: formData.description || "Once you submit your request, we'll send a confirmation email within 24 hours. If you haven't received it by then, please contact our office to confirm we've received your scheduling request.",
+      headingSidebar: infoCard.title || "You tell us. We Listen.",
+      descSidebar: infoCard.description || "Rely on our team to help your business succeed.",
+      addressText,
+      addressLink: "https://maps.google.com/",
+      callText,
       emailSchedulingText,
       emailScheduling,
       emailProductionText,
@@ -84,11 +59,9 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
       emailMarketing,
       emailGeneralText,
       emailGeneral,
-      faceBookLink: sd.faceBookLink || socialLinks[1]?.url || "https://www.facebook.com/",
-      faceBookIcon: sd.faceBookIcon || socialLinks[1]?.icon || "https://res.cloudinary.com/dh3dys6sf/image/upload/v1766654114/facebook-icon.png",
-      linkedinLink: sd.linkedinLink || socialLinks[0]?.url || "https://www.linkedin.com/",
-      linkedinIcon: sd.linkedinIcon || socialLinks[0]?.icon || "https://res.cloudinary.com/dh3dys6sf/image/upload/v1766654114/linkedin-icon.png",
-      mapLink: sd.mapLink || map.embedUrl || "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5912.049902837201!2d-71.746638!3d42.192534!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e40f9a42b7bfe5%3A0x3178cc10b1995a2!2s34%20Grafton%20St%2C%20Millbury%2C%20MA%2001527!5e0!3m2!1sen!2sus!4v1767883263142!5m2!1sen!2sus",
+      faceBookLink: socialLinks[1]?.url || "https://www.facebook.com/",
+      linkedinLink: socialLinks[0]?.url || "https://www.linkedin.com/",
+      mapLink: map.embedUrl || "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5912.049902837201!2d-71.746638!3d42.192534!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e40f9a42b7bfe5%3A0x3178cc10b1995a2!2s34%20Grafton%20St%2C%20Millbury%2C%20MA%2001527!5e0!3m2!1sen!2sus!4v1767883263142!5m2!1sen!2sus",
     };
   };
 
@@ -287,69 +260,8 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
             </div>
            
           </div>
-
-          {/* --- SOCIAL ICONS --- */}
-          <div className="border-t border-gray-800 pt-6 mt-6">
-            <h3 className="text-sm font-bold text-cyan-400 mb-4">Social Media Icons</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* LinkedIn Icon */}
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">LinkedIn Icon</label>
-                  {isEditing && onBrowseLibrary && (
-                    <button
-                      onClick={() => onBrowseLibrary("linkedinIcon")}
-                      className="flex items-center gap-2 px-3 py-1.5 text-xs bg-green-500/20 border border-green-500/50 text-green-400 rounded-lg hover:bg-green-500/30 transition-all"
-                    >
-                      <HiOutlineViewGridAdd className="text-sm" />
-                    </button>
-                  )}
-                </div>
-                <div className="relative border-2 border-dashed rounded-lg h-32 bg-black/20 flex items-center justify-center overflow-hidden group">
-                  <img
-                    src={content.linkedinIcon}
-                    alt="LinkedIn"
-                    className="h-24 w-24 object-contain"
-                  />
-                  {isEditing && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <HiOutlineUpload className="text-cyan-400 text-xl" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Facebook Icon */}
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Facebook Icon</label>
-                  {isEditing && onBrowseLibrary && (
-                    <button
-                      onClick={() => onBrowseLibrary("faceBookIcon")}
-                      className="flex items-center gap-2 px-3 py-1.5 text-xs bg-green-500/20 border border-green-500/50 text-green-400 rounded-lg hover:bg-green-500/30 transition-all"
-                    >
-                      <HiOutlineViewGridAdd className="text-sm" />
-                    </button>
-                  )}
-                </div>
-                <div className="relative border-2 border-dashed rounded-lg h-32 bg-black/20 flex items-center justify-center overflow-hidden group">
-                  <img
-                    src={content.faceBookIcon}
-                    alt="Facebook"
-                    className="h-24 w-24 object-contain"
-                  />
-                  {isEditing && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <HiOutlineUpload className="text-cyan-400 text-xl" />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* COMMENTED OUT: Old image upload section
         <div className="relative">
           <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Main Image</label>
           <div onClick={() => isEditing && mainFileRef.current.click()} className={`relative border-2 border-dashed rounded-2xl h-full min-h-[200px] flex items-center justify-center bg-black/20 overflow-hidden ${isEditing ? 'border-cyan-500 cursor-pointer group' : 'border-gray-800'}`}>
@@ -358,7 +270,6 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
             {isEditing && <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><HiOutlineUpload className="text-cyan-400 text-2xl" /></div>}
           </div>
         </div>
-        */}
       </div>
 
       {/* --- PREVIEW --- */}
@@ -397,42 +308,19 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
             </div>
 
             {/* Email Contacts */}
-            <div className="border-t border-gray-800 pt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="border-t border-gray-800 pt-4 grid grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailSchedulingText}</p>
-                <a href={`mailto:${content.emailScheduling}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailScheduling}</a>
+                <p className="text-xs text-gray-500 uppercase">{content.emailSchedulingText}</p>
+                <a href={`mailto:${content.emailScheduling}`} className="text-sm text-cyan-400 hover:text-cyan-300">{content.emailScheduling}</a>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailProductionText}</p>
-                <a href={`mailto:${content.emailProduction}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailProduction}</a>
+                <p className="text-xs text-gray-500 uppercase">{content.emailProductionText}</p>
+                <a href={`mailto:${content.emailProduction}`} className="text-sm text-cyan-400 hover:text-cyan-300">{content.emailProduction}</a>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailInvoicingText}</p>
-                <a href={`mailto:${content.emailInvoicing}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailInvoicing}</a>
+                <p className="text-xs text-gray-500 uppercase">{content.emailInvoicingText}</p>
+                <a href={`mailto:${content.emailInvoicing}`} className="text-sm text-cyan-400 hover:text-cyan-300">{content.emailInvoicing}</a>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailVideoText}</p>
-                <a href={`mailto:${content.emailVideo}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailVideo}</a>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailMarketingText}</p>
-                <a href={`mailto:${content.emailMarketing}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailMarketing}</a>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase font-bold">{content.emailGeneralText}</p>
-                <a href={`mailto:${content.emailGeneral}`} className="text-sm text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer">{content.emailGeneral}</a>
-              </div>
-            </div>
-
-            {/* Map Preview */}
-            <div className="border-t border-gray-800 pt-4 space-y-3">
-              <h4 className="text-lg font-bold text-cyan-400">Location Map</h4>
-              <iframe
-                className="w-full h-96 rounded-xl border border-gray-700"
-                src={content.mapLink}
-                allowFullScreen=""
-                loading="lazy"
-              ></iframe>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import { a, b } from "framer-motion/client";
 function ContactHero({ data }) {
   if (!data) return null;
   // console.log("ContactHero data:", data);
-  const { heading, description, buttons, images } = data;
+  const { heading, description, buttons, images, ctaText1, ctaLink1, ctaText2, ctaLink2 } = data;
   const settings = {
     dots: false,
     arrows: false,
@@ -58,16 +58,16 @@ function ContactHero({ data }) {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <Button
-            text="Request a call back for other services"
-            link={"mailto:info@varallogroup.com"}
+            text={ctaText1 || "Request a call back for other services"}
+            link={ctaLink1 || "mailto:info@varallogroup.com"}
             arrowClass="d"
           />
           <div className="border-b border-white ">
             <a
-              href="#contact-main"
+              href={ctaLink2 || "#contact-main"}
               className="text-base font-manrope md:text-xl"
             >
-              {buttons ? buttons[0]?.text : `Schedule a Deposition &nbsp;{" "}`}
+              {ctaText2 || "Schedule a Deposition"}
               &nbsp;
               <i class="fal fa-external-link text-base"></i>
             </a>

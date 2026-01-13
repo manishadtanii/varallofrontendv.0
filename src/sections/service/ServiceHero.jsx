@@ -29,7 +29,7 @@ function ServiceHero({ data }) {
   
   if (!data) return null;
   console.log(data);
-  // console.log("ServiceHero data:", data);
+  console.log("ServiceHero data:", data);
   const {Imagetop, Imagebottom,  centerContent} = data;
   const {heading, description,  cta, } = centerContent;
   console.log("ServiceHero data:", centerContent);
@@ -53,7 +53,7 @@ function ServiceHero({ data }) {
 
 
             </h1>
-            <img src="./s-hero.gif" className="m-auto" alt="" />
+            <img src={centerContent.Image['url']} className="m-auto" alt="" />
             <p className="text-xl text-center text-white font-manrope">
               {description? description : "At The Varallo Group, we bring together six specialized sub-brands under one clear vision. We are your single source for smarter, effective, and scalable success."}
             </p>

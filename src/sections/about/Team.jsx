@@ -93,7 +93,7 @@ const Team = ({ data }) => {
                   <h3 className="font-manrope font-medium text-xl">
                     {member.name}
                   </h3>
-                  <p className="text-base">{member.role}</p>
+                  <p className="text-sm font-manrope text-gray-600">{member.designation}</p>
                 </div>
 
                 <div className="">

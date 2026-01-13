@@ -243,12 +243,14 @@ const Header = () => {
             >
               Resource Portal
             </button>
-            <Link
-              to="/pay"
+            <a
+              href="https://api.ipospays.com/v1/sl/1qM3y_011025163407"
+              target="_blank"
+              rel="noopener noreferrer"
               className="border border-white rounded-full px-5 py-2 text-lg font-manrope hover:bg-white hover:text-black transition"
             >
               Pay Invoice
-            </Link>
+            </a>
           </div>
         </motion.div>
       </div>
@@ -415,13 +417,15 @@ const Header = () => {
               >
                 Resource Portal
               </button>
-              <Link
-                to="/pay"
+              <a
+                href="https://api.ipospays.com/v1/sl/1qM3y_011025163407"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="border border-white rounded-full px-5 py-2 text-sm text-center hover:bg-white hover:text-black transition"
                 onClick={() => setIsOpen(false)}
               >
                 Pay Invoice
-              </Link>
+              </a>
             </div>
           </motion.div>
         )}

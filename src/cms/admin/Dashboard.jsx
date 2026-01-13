@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SectionEditor from "../components/SectionEditor"; // The component created in the previous step
+import MediaLibraryModal from "../components/MediaLibraryModal";
+import ContactSubmissions from "../components/ContactSubmissions";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import {
   HiOutlineDatabase,
   HiChevronDown,
@@ -16,7 +19,11 @@ import {
   HiOutlineShieldCheck, // Verify
   HiOutlineChartBar,    // Reporting
   HiOutlineUserCircle,
+  HiOutlineInbox,
+  HiOutlineLogout,      // Logout icon
 } from "react-icons/hi";
+// Import API Service
+import { pageAPI, sectionAPI, uploadAPI } from "../../services/apiService";
 // 1. Import your custom section components
 import Hero from "../section/home/Hero";
 import Experience from "../section/home/Experience";
@@ -46,10 +53,98 @@ const Dashboard = () => {
   const [activeId, setActiveId] = useState("Hero");
   const [openMenu, setOpenMenu] = useState("home");
   const [cmsData, setCmsData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+  const [mediaMode, setMediaMode] = useState("view"); // "view" or "select"
+  const [currentImageFieldName, setCurrentImageFieldName] = useState(null); // Track which field to populate
+  const navigate = useNavigate();
 
-  // Toggle dropdowns in sidebar
-  const toggle = (menu) => {
-    setOpenMenu(openMenu === menu ? null : menu);
+  // Fetch all page data on component mount
+  useEffect(() => {
+    const fetchAllPagesData = async () => {
+      try {
+        setLoading(true);
+        const pagesResponse = await pageAPI.getPages();
+        
+        if (pagesResponse.data && Array.isArray(pagesResponse.data)) {
+          // Organize pages by slug for easy access
+          const pageMap = {};
+          
+          for (const page of pagesResponse.data) {
+            const pageData = await pageAPI.getPageBySlug(page.slug);
+            if (pageData.data) {
+              pageMap[page.slug] = pageData.data;
+              console.log(`📖 Loaded page: ${page.slug}`, {
+                sections: pageData.data.sections?.map(s => ({
+                  sectionKey: s.sectionKey,
+                  hasContent: !!s.content
+                }))
+              });
+            }
+          }
+          
+          setCmsData(pageMap);
+          console.log('✅ All CMS data loaded:', pageMap);
+        }
+      } catch (error) {
+        console.error('❌ Failed to load CMS data:', error);
+        toast.error('Failed to load page data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllPagesData();
+  }, []);
+
+  // Toggle function to switch between pages
+  const toggle = (pageName) => {
+    setActivePage(pageName);
+    setOpenMenu(openMenu === pageName ? null : pageName);
+  };
+
+  // Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    toast.success('Logged out successfully');
+    navigate('/admin/login');
+  };
+
+  // Handle image selection from MediaLibrary (Select mode)
+  const handleImageSelected = (imageUrl) => {
+    if (!currentImageFieldName) {
+      console.warn("⚠️ No field name specified for image");
+      return;
+    }
+
+    console.log(`🖼️ Image selected for field: ${currentImageFieldName}`);
+    console.log(`🔗 Image URL: ${imageUrl}`);
+
+    // Update the active section's data with the selected image
+    // Trigger parent component to handle the image update
+    const event = new CustomEvent("imageSelected", {
+      detail: {
+        fieldName: currentImageFieldName,
+        imageUrl: imageUrl,
+      },
+    });
+    window.dispatchEvent(event);
+
+    // Reset state
+    setMediaLibraryOpen(false);
+    setMediaMode("view");
+    setCurrentImageFieldName(null);
+
+    toast.success("Image selected and populated!");
+  };
+
+  // Open media library in SELECT mode for a specific field
+  const openMediaLibraryForField = (fieldName) => {
+    console.log(`📂 Opening media library for field: ${fieldName}`);
+    setMediaMode("select");
+    setCurrentImageFieldName(fieldName);
+    setMediaLibraryOpen(true);
   };
 
   // 2. Logic to pick the right component based on the sidebar selection
@@ -58,13 +153,18 @@ const Dashboard = () => {
     switch (activeId) {
       case "Hero":
         return (
-          <Hero sectionData={activeSectionData} onSave={handleUpdateSection} />
+          <Hero 
+            sectionData={activeSectionData} 
+            onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
+          />
         );
       case "Experience":
         return (
           <Experience
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Services":
@@ -72,17 +172,19 @@ const Dashboard = () => {
           <Services
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Trust":
         return (
-          <Trust sectionData={activeSectionData} onSave={handleUpdateSection} />
+          <Trust sectionData={activeSectionData} onSave={handleUpdateSection} onBrowseLibrary={openMediaLibraryForField} />
         );
       case "Capabilities":
         return (
           <Capabilities
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Testimonials":
@@ -90,6 +192,7 @@ const Dashboard = () => {
           <Testimonials
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "About-Hero":
@@ -97,6 +200,7 @@ const Dashboard = () => {
           <AboutHero
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Vision":
@@ -104,6 +208,7 @@ const Dashboard = () => {
           <Vision
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Mission":
@@ -111,6 +216,7 @@ const Dashboard = () => {
           <Mission
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Journey":
@@ -118,6 +224,7 @@ const Dashboard = () => {
           <Journey
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Founder":
@@ -125,6 +232,7 @@ const Dashboard = () => {
           <Founder
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Team":
@@ -132,6 +240,7 @@ const Dashboard = () => {
           <Team
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Testimonials-About":
@@ -139,6 +248,7 @@ const Dashboard = () => {
           <TestimonialsAbout
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "A Support Company":
@@ -146,6 +256,7 @@ const Dashboard = () => {
           <ASupportCompany
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "All Service":
@@ -153,6 +264,7 @@ const Dashboard = () => {
           <AllServices
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Start Your Journey":
@@ -160,6 +272,7 @@ const Dashboard = () => {
           <StartYourJourney
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Contact Us":
@@ -167,6 +280,7 @@ const Dashboard = () => {
           <ContactUs
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Agency Management":
@@ -197,6 +311,8 @@ const Dashboard = () => {
             onSave={handleUpdateSection}
           />
         );
+      case "Contact Submissions":
+        return <ContactSubmissions />;
       default:
         return (
           <div className="flex items-center justify-center h-full text-gray-500 border-2 border-dashed border-gray-800 rounded-3xl">
@@ -206,16 +322,180 @@ const Dashboard = () => {
     }
   };
 
-  // Logic to handle saving (linked to your API logic)
-  const handleUpdateSection = async (updatedData) => {
-    console.log("Saving to:", activePage, activeId, updatedData);
-    // Add your fetch/patch logic here as per your API service
-    toast.success(`Saved ${activeId} successfully!`);
+  // Logic to handle saving section data via API
+  const handleUpdateSection = async (updatedData, imageFile = null, imageFieldPath = null) => {
+    try {
+      console.log("🔄 Updating section:", activePage, activeId, updatedData);
+      
+      // Convert activePage to proper slug format
+      const pageSlug = activePage;
+      
+      // Convert activeId to sectionKey format (match database format)
+      let sectionKey = activeId.toLowerCase().replace(/\s+/g, '-');
+      
+      // For about page, strip the "about-" prefix
+      if (activePage === 'about' && sectionKey.startsWith('about-')) {
+        sectionKey = sectionKey.replace('about-', '');
+      }
+
+      // Handle special case: "Team" button maps to "leadership_team" sectionKey
+      if (sectionKey === 'team') {
+        sectionKey = 'leadership_team';
+        console.log(`🔄 Converted "team" → "leadership_team"`);
+      }
+
+      // Handle special cases for Services page sections
+      if (activePage === 'services') {
+        if (sectionKey === 'a-support-company') {
+          sectionKey = 'services-hero';
+          console.log(`🔄 Converted "A Support Company" → "services-hero"`);
+        } else if (sectionKey === 'all-service') {
+          sectionKey = 'services-grid';
+          console.log(`🔄 Converted "All Service" → "services-grid"`);
+        }
+      }
+
+      // Handle special cases for Contact page sections
+      if (activePage === 'contact') {
+        if (sectionKey === 'start-your-journey') {
+          sectionKey = 'contactHero';
+          console.log(`🔄 Contact section: "Start Your Journey" → "contactHero"`);
+        } else if (sectionKey === 'contact-us') {
+          sectionKey = 'contactUsForm';
+          console.log(`🔄 Contact section: "Contact Us" → "contactUsForm"`);
+        }
+      }
+      
+      console.log(`🔄 Saving with sectionKey: ${sectionKey}`);
+      
+      // Call the patch API
+      const result = await sectionAPI.updateSection(
+        pageSlug,
+        sectionKey,
+        updatedData,
+        imageFile,
+        imageFieldPath
+      );
+
+      // Update local state with new data
+      setCmsData((prev) => ({
+        ...prev,
+        [pageSlug]: {
+          ...prev[pageSlug],
+          sections: prev[pageSlug]?.sections?.map((s) =>
+            s.sectionKey === sectionKey ? { ...s, content: result.data?.content || updatedData } : s
+          ),
+        },
+      }));
+
+      toast.success(`✅ Saved ${activeId} successfully!`);
+    } catch (error) {
+      console.error("❌ Failed to save section:", error);
+      toast.error(`Failed to save ${activeId}: ${error.message}`);
+    }
   };
 
   // Helper to find specific section data from your state
-  const activeSectionData =
-    (cmsData[activePage] || []).find((s) => s.id === activeId) || {};
+  // Dynamically get section data based on activePage and activeId
+  const activeSectionData = (() => {
+    const pageData = cmsData[activePage];
+    
+    if (!pageData || !pageData.sections) {
+      console.log(`❌ No page data found for: ${activePage}`);
+      return {};
+    }
+
+    // Convert activeId to match sectionKey format in database
+    let sectionKey = activeId.toLowerCase().replace(/\s+/g, '-');
+    
+    // For about page, strip the "about-" prefix since DB stores just the base name
+    if (activePage === 'about' && sectionKey.startsWith('about-')) {
+      sectionKey = sectionKey.replace('about-', '');
+    }
+
+    // Handle special case: "Team" button maps to "leadership_team" sectionKey
+    if (sectionKey === 'team') {
+      sectionKey = 'leadership_team';
+    }
+
+    // Handle special case: "Testimonials" in about maps to "testimonials"
+    if (activePage === 'about' && sectionKey === 'testimonials') {
+      sectionKey = 'testimonials';
+    }
+
+    // Handle special cases for Services page sections
+    if (activePage === 'services') {
+      if (sectionKey === 'a-support-company') {
+        sectionKey = 'services-hero';
+        console.log(`🔄 Converted "A Support Company" → "services-hero"`);
+      } else if (sectionKey === 'all-service') {
+        sectionKey = 'services-grid';
+        console.log(`🔄 Converted "All Service" → "services-grid"`);
+      }
+    }
+
+    // Handle special cases for Contact page sections
+    if (activePage === 'contact') {
+      if (sectionKey === 'start-your-journey') {
+        sectionKey = 'contactHero';
+        console.log(`🔄 Contact section: "Start Your Journey" → "contactHero"`);
+      } else if (sectionKey === 'contact-us') {
+        sectionKey = 'contactUsForm';
+        console.log(`🔄 Contact section: "Contact Us" → "contactUsForm"`);
+      }
+    }
+    
+    const availableSections = pageData.sections.map(s => ({
+      sectionKey: s.sectionKey,
+      id: s.id,
+      name: s.name,
+      hasContent: !!s.content,
+      contentKeys: s.content ? Object.keys(s.content) : []
+    }));
+    
+    console.log(`🔍 Looking for section:`, {
+      activePage,
+      activeId,
+      sectionKey,
+      availableSections
+    });
+    
+    const section = pageData.sections.find((s) => 
+      s.sectionKey === sectionKey || 
+      s.sectionKey === activeId.toLowerCase() ||
+      s.id === activeId || 
+      s.name === activeId
+    );
+
+    if (section?.content) {
+      console.log(`✅ Found section data for ${activeId}:`, section.content);
+      console.log(`📊 Content structure:`, {
+        keys: Object.keys(section.content),
+        isEmpty: Object.keys(section.content).length === 0,
+        fullContent: section.content
+      });
+    } else {
+      console.log(`⚠️ No content found for section ${activeId}`);
+      console.log(`📋 Available sections:`, pageData.sections.map(s => ({
+        sectionKey: s.sectionKey,
+        hasContent: !!s.content
+      })));
+    }
+
+    return section?.content || {};
+  })();
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen bg-[#05080a] text-white items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
+          <p className="text-gray-400">Loading CMS data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-[#05080a] text-white p-6 gap-6 font-manrope">
@@ -224,11 +504,14 @@ const Dashboard = () => {
         {/* --- SIDEBAR --- */}
         <div className="w-80 flex flex-col gap-4 sticky top-6">
           <div className="bg-[#0a0f14]/80 border border-gray-800 rounded-[30px] p-6 h-[calc(100vh-48px)] overflow-y-auto custom-scrollbar">
-            <div className="flex items-center gap-3 px-2 mb-8 border-b border-gray-800 pb-6">
-              <img src="/icon2.png" alt="Logo" className="w-8 h-8" />
-              <h2 className="text-lg font-bold text-white">
-                The Varallo Group
-              </h2>
+            <div className="flex items-center justify-between gap-3 px-2 mb-8 border-b border-gray-800 pb-6">
+              <div className="flex items-center gap-3">
+                <img src="/icon2.png" alt="Logo" className="w-8 h-8" />
+                <h2 className="text-lg font-bold text-white">
+                  The Varallo Group
+                </h2>
+              </div>
+             
             </div>
 
             <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-2 px-2">
@@ -309,6 +592,7 @@ const Dashboard = () => {
                     <button
                       key={sec}
                       onClick={() => {
+                        console.log(`📌 Clicked About section: ${sec}`);
                         setActivePage("about");
                         setActiveId(sec);
                       }}
@@ -329,7 +613,7 @@ const Dashboard = () => {
               <button
                 onClick={() => toggle("service")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
-                  activePage === "service"
+                  activePage === "services"
                     ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
                     : "text-gray-400 border-transparent"
                 }`}
@@ -350,11 +634,11 @@ const Dashboard = () => {
                     <button
                       key={sec}
                       onClick={() => {
-                        setActivePage("service");
+                        setActivePage("services");
                         setActiveId(sec);
                       }}
                       className={`text-left px-4 py-2 text-xs font-medium transition-all ${
-                        activeId === sec && activePage === "service"
+                        activeId === sec && activePage === "services"
                           ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
                           : "text-gray-500 hover:text-white"
                       }`}
@@ -711,9 +995,57 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
+
+            {/* Media Library Button */}
+            <div className="mt-8 pt-6 border-t border-gray-800">
+              <button
+                onClick={() => setMediaLibraryOpen(true)}
+                className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border bg-cyan-500/10 text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/20 transition font-bold uppercase text-sm"
+              >
+                <HiOutlineDatabase className="text-xl" />
+                 Media Library
+              </button>
+
+              {/* Contact Submissions Button */}
+              <button
+                onClick={() => {
+                  setActivePage("admin");
+                  setActiveId("Contact Submissions");
+                }}
+                className="w-full mt-3 flex items-center justify-center gap-3 p-3 rounded-xl border bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20 transition font-bold uppercase text-sm"
+              >
+                <HiOutlineInbox className="text-xl" />
+                Submissions
+              </button>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="w-full mt-3 flex items-center justify-center gap-3 p-3 rounded-xl border bg-red-500/10 text-red-400 border-red-500/30 hover:bg-red-500/20 transition font-bold uppercase text-sm"
+              >
+                <HiOutlineLogout className="text-xl" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </aside>
+
+      {/* Media Library Modal */}
+      <MediaLibraryModal
+        isOpen={mediaLibraryOpen}
+        onClose={() => {
+          setMediaLibraryOpen(false);
+          setMediaMode("view");
+          setCurrentImageFieldName(null);
+        }}
+        mode={mediaMode}
+        onSelectImage={(url) => {
+          navigator.clipboard.writeText(url);
+          toast.success("Image URL copied to clipboard!");
+        }}
+        onImageSelect={handleImageSelected}
+      />
 
       {/* --- MAIN CONTENT AREA --- */}
       <div className="flex-1 flex flex-col gap-6 overflow-hidden">

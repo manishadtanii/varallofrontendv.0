@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineLockClosed, HiOutlineEye } from "react-icons/hi";
+import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineEye } from "react-icons/hi";
 
 const WhatWeProvide = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -36,6 +36,20 @@ const WhatWeProvide = ({ sectionData, onSave }) => {
     setContent(prev => ({ ...prev, [key]: url, [`${key}File`]: file }));
   };
 
+  const handleCancel = () => {
+    setContent({
+      heading: sectionData?.heading || "What We Provide",
+      subtext: sectionData?.subtext || "We manage your back office so you can focus on delivering top-tier client service. From scheduling to payroll, we streamline the chaos behind the scenes.",
+      wwp1: sectionData?.wwp1 || "Client onboarding assistance",
+      wwp2: sectionData?.wwp2 || "Scheduling and Calendar Support",
+      wwp3: sectionData?.wwp3 || "Operations reporting & performance",
+      wwp4: sectionData?.wwp4 || "Vendor coordination",
+      wwp5: sectionData?.wwp5 || "Branding & marketing help",
+    });
+    setIsEditing(false);
+    toast.success("Changes discarded");
+  };
+
   return (
     <div className="flex flex-col gap-8 font-manrope">
         <Toaster />
@@ -47,14 +61,29 @@ const WhatWeProvide = ({ sectionData, onSave }) => {
         </div>
         
         <div className="flex gap-3">
-          <button onClick={() => setIsEditing(!isEditing)} className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border ${isEditing ? 'bg-gray-800 border-gray-700 text-white' : 'bg-cyan-500 text-black border-cyan-400'}`}>
-            {isEditing ? <HiOutlineLockClosed /> : <HiOutlinePencilAlt />}
-            {isEditing ? "LOCK" : "EDIT"}
-          </button>
-          {isEditing && (
-            <button onClick={() => { onSave(content); setIsEditing(false); }} className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg">
-              <HiOutlineSave /> SAVE
+          {!isEditing ? (
+            <button
+              onClick={() => setIsEditing(true)}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-cyan-500 text-black border-cyan-400`}
+            >
+              <HiOutlinePencilAlt />
+              EDIT
             </button>
+          ) : (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+              >
+                <HiOutlineX /> CANCEL
+              </button>
+              <button
+                onClick={() => { onSave(content); setIsEditing(false); }}
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              >
+                <HiOutlineSave /> SAVE
+              </button>
+            </>
           )}
         </div>
       </div>

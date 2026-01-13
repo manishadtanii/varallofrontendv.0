@@ -95,19 +95,26 @@ export default function Footer() {
                   Follow Us
                 </h4>
                 <div className="flex space-x-4">
-                  {["facebook-f", "linkedin-in"].map((icon, idx) => (
-                    <motion.a
-                      key={idx}
-                      href="https://www.linkedin.com/company/the-varallo-group/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      initial={{ scale: 1 }}
-                      whileHover={{ scale: 1.1 }}
-                      className="bg-black text-white rounded-full w-10 h-10 text-center text-xl leading-10"
-                    >
-                      <i className={`fab fa-${icon}`}></i>
-                    </motion.a>
-                  ))}
+                  <motion.a
+                    href="https://www.facebook.com/profile.php?id=100057624812642"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    className="bg-black text-white rounded-full w-10 h-10 text-center text-xl leading-10"
+                  >
+                    <i className="fab fa-facebook-f"></i>
+                  </motion.a>
+                  <motion.a
+                    href="https://www.linkedin.com/company/the-varallo-group/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.1 }}
+                    className="bg-black text-white rounded-full w-10 h-10 text-center text-xl leading-10"
+                  >
+                    <i className="fab fa-linkedin-in"></i>
+                  </motion.a>
                 </div>
               </div>
             </motion.div>
@@ -115,10 +122,6 @@ export default function Footer() {
         </div>
       </div>
       <ScrollToTopButton />
-      {/* Giant Watermark Text */}
-      <div className="foot-text font-manrope font-medium  opacity-5 mt-[150px] lg:mt-[250px] lg:leading-[250px]">
-        ©TVG - {new Date().getFullYear()}
-      </div>
     </footer>
   );
 }

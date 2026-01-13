@@ -1,46 +1,42 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  HiOutlineUpload,
-  HiOutlineSave,
-  HiOutlinePencilAlt,
-  HiOutlineLockClosed,
-  HiOutlineEye,
-} from "react-icons/hi";
+import { HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineTrash } from "react-icons/hi";
 
 const Testimonials = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [showReference, setShowReference] = useState(false);
-  const mainFileRef = useRef(null);
 
-  // State initialized with individual keys for absolute clarity
+  console.log("📍 Testimonials sectionData:", sectionData);
+
+  // State initialized with actual backend data structure
   const [content, setContent] = useState({
     heading: sectionData?.heading || "Why Our Clients Choose Us Again & Again",
-
-    // Testimonial 1
-    c1_title: sectionData?.c1_title || "Michael Scire",
-    c1_subtitle: sectionData?.c1_subtitle || "Florida Court Reporters Association",
-    c1_desc: sectionData?.c1_desc || "“Such a great experience working with The Varallo Group. I cannot say enough wonderful things about each of you. You are all professional, helpful, efficient, and respectful. You all jumped right in and often offered help when I didn’t realize I needed it. The conference ran seamlessly. Thank you from the bottom of my heart.”",
-    
-    // Testimonial 2
-    c2_title: sectionData?.c2_title || "Ray Catuogno, Jr.",
-    c2_subtitle: sectionData?.c2_subtitle || "Real Time Court Reporting",
-    c2_desc: sectionData?.c2_desc || "“I don’t get an opportunity to say it often enough, but I really appreciate the effort and hard work that everyone puts into making my business operations run smoothly. My work to establish the business was done long ago, and now it’s everyone else’s work that continues to make the business a success. So thanks for the big things that are a pain to do, and thanks for the little things that don’t get as much notice but are just as important.”",
-    
-    // Testimonial 3
-    c3_title: sectionData?.c3_title || "Pam Owen",
-    c3_subtitle: sectionData?.c3_subtitle || "BOSS Reporters",
-    c3_desc: sectionData?.c3_desc || "“I am so appreciative of what you have taught me and for all of your efforts. I am very pleased with the progress we’ve made together and grateful for your positivity and eagerness to get ‘all the ducks in a row.’ I am optimistic and very excited about the future, and know I am lucky to have found you.”",
-    
-    // Testimonial 4
-    c4_title: sectionData?.c4_title || "Mary Beth Johnson",
-    c4_subtitle: sectionData?.c4_subtitle || "Community College of Allegheny County",
-    c4_desc: sectionData?.c4_desc || "“May I begin by thanking you for a lifetime of work on behalf of Steno reporting. Your brilliance in creating A to Z and Basic Training saved our profession. As a result of your initiative, we now teach students from Oregon to Atlanta. You had vision, and I am grateful for your foresight.”",
-    
-    // Testimonial 5
-    c5_title: sectionData?.c5_title || "Michael Lewis",
-    c5_subtitle: sectionData?.c5_subtitle || "Discovery Legal Services",
-    c5_desc: sectionData?.c5_desc || "“Working with The Varallo Group and Cedar Bushong has been an excellent experience. Their team handled our website development with precision, creating a site that truly reflects our brand and meets our needs. Beyond the initial development, their ongoing support has been invaluable. They are consistently responsive and supportive, addressing any issues promptly and helping us adapt our site as our business evolves. We couldn’t be happier with their dedication and commitment to our success. Highly recommend!”",
+    cards: sectionData?.cards || [
+      {
+        name: "Pam Owen",
+        company: "BOSS Reporters",
+        text: "Varallo has been an absolute game-changer for our business. Their team is responsive, reliable, and genuinely invested in our success. We couldn't ask for a better partner.",
+      },
+      {
+        name: "Mary Beth Johnson",
+        company: "Community College of Allegheny County",
+        text: "The level of professionalism and attention to detail from Varallo is outstanding. They handle our complex needs with ease and always deliver on time.",
+      },
+      {
+        name: "Sarah Mitchell",
+        company: "Legal Associates Group",
+        text: "Working with Varallo has streamlined our entire process. Their technology solutions combined with excellent customer service make them indispensable.",
+      },
+      {
+        name: "James Rodriguez",
+        company: "Corporate Legal Department",
+        text: "We trust Varallo with our most critical cases. Their expertise and dedication ensure every detail is perfect. Highly recommended!",
+      },
+      {
+        name: "Emily Thompson",
+        company: "District Court Services",
+        text: "The consistency and quality of service from Varallo is exceptional. They've become an essential part of our operations.",
+      },
+    ],
   });
 
   const handleChange = (e) => {
@@ -48,317 +44,249 @@ const Testimonials = ({ sectionData, onSave }) => {
     setContent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpdate = (key, e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const maxSize = 1 * 1024 * 1024; // 1MB
-    if (file.size > maxSize) {
-      toast.error("File size must be less than 1MB");
-      return;
+  const updateCard = (index, field, value) => {
+    setContent((prev) => {
+      const newCards = [...prev.cards];
+      newCards[index] = { ...newCards[index], [field]: value };
+      return { ...prev, cards: newCards };
+    });
+  };
+
+  const addCard = () => {
+    setContent((prev) => ({
+      ...prev,
+      cards: [
+        ...prev.cards,
+        {
+          name: "New Client",
+          company: "Company Name",
+          text: "Add testimonial text here...",
+        },
+      ],
+    }));
+  };
+
+  const removeCard = (index) => {
+    setContent((prev) => ({
+      ...prev,
+      cards: prev.cards.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSave = async () => {
+    try {
+      await onSave(content);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Save error:", error);
     }
-    const url = URL.createObjectURL(file);
-    setContent((prev) => ({ ...prev, [key]: url, [`${key}File`]: file }));
+  };
+
+  const handleCancel = () => {
+    setContent({
+      heading: sectionData?.heading || "Why Our Clients Choose Us Again & Again",
+      cards: sectionData?.cards || [
+        {
+          name: "Pam Owen",
+          company: "BOSS Reporters",
+          text: "Varallo has been an absolute game-changer for our business. Their team is responsive, reliable, and genuinely invested in our success. We couldn't ask for a better partner.",
+        },
+        {
+          name: "Mary Beth Johnson",
+          company: "Community College of Allegheny County",
+          text: "The level of professionalism and attention to detail from Varallo is outstanding. They handle our complex needs with ease and always deliver on time.",
+        },
+        {
+          name: "Sarah Mitchell",
+          company: "Legal Associates Group",
+          text: "Working with Varallo has streamlined our entire process. Their technology solutions combined with excellent customer service make them indispensable.",
+        },
+        {
+          name: "James Rodriguez",
+          company: "Corporate Legal Department",
+          text: "We trust Varallo with our most critical cases. Their expertise and dedication ensure every detail is perfect. Highly recommended!",
+        },
+        {
+          name: "Emily Thompson",
+          company: "District Court Services",
+          text: "The consistency and quality of service from Varallo is exceptional. They've become an essential part of our operations.",
+        },
+      ],
+    });
+    setIsEditing(false);
+    toast.success("Changes discarded");
   };
 
   return (
     <div className="flex flex-col gap-8 font-manrope">
       <Toaster />
+
       {/* --- HEADER --- */}
       <div className="flex justify-between items-center border-b border-gray-800 pb-4">
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">
-            Section Editor
-          </h2>
-        </div>
+        <h2 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">Testimonials Section</h2>
 
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border ${
-              isEditing
-                ? "bg-gray-800 border-gray-700 text-white"
-                : "bg-cyan-500 text-black border-cyan-400"
-            }`}
-          >
-            {isEditing ? <HiOutlineLockClosed /> : <HiOutlinePencilAlt />}
-            {isEditing ? "LOCK" : "EDIT"}
-          </button>
-          {isEditing && (
+          {!isEditing ? (
             <button
-              onClick={() => {
-                onSave(content);
-                setIsEditing(false);
-              }}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              onClick={() => setIsEditing(true)}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-cyan-500 text-black border-cyan-400`}
             >
-              <HiOutlineSave /> SAVE
+              <HiOutlinePencilAlt />
+              EDIT
             </button>
+          ) : (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+              >
+                <HiOutlineX /> CANCEL
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              >
+                <HiOutlineSave /> SAVE
+              </button>
+            </>
           )}
         </div>
       </div>
-  {/* --- MAIN SECTION --- */}
-      <div className="grid grid-cols-1  gap-6">
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Main Heading</label>
-            <input disabled={!isEditing} name="heading" value={content.heading} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-          </div>
-        {/*   <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Sub Heading</label>
-            <input disabled={!isEditing} name="subSecTitle" value={content.subSecTitle} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Paragraph Text</label>
-            <textarea disabled={!isEditing} name="subtext" value={content.subtext} placeholder="" onChange={handleChange} rows="3" className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Sub Section Title</label>
-            <input disabled={!isEditing} placeholder="" name="ctaText" value={content.subSecTitle} onChange={handleChange} className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            </div>
-              <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Sub Section Pera</label>
-            <input disabled={!isEditing} placeholder="" name="ctaLink" value={content.subSecPera} onChange={handleChange} className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            </div>
-           
-          </div> */}
+
+      {/* --- HEADING --- */}
+      <div className="flex flex-col gap-2">
+        <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Section Heading</label>
+        <input
+          disabled={!isEditing}
+          name="heading"
+          value={content.heading}
+          onChange={handleChange}
+          className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${
+            isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+          }`}
+        />
+      </div>
+
+      {/* --- TESTIMONIAL CARDS --- */}
+      <div className="border-t border-gray-800 pt-8">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm font-bold text-cyan-400">Testimonial Cards ({content.cards?.length})</h3>
+          {isEditing && (
+            <button
+              onClick={addCard}
+              className="text-xs bg-cyan-500/20 border border-cyan-400 text-cyan-400 px-3 py-1.5 rounded-lg hover:bg-cyan-500/30 transition-all"
+            >
+              + Add Card
+            </button>
+          )}
         </div>
 
-        {/* <div className="relative">
-          <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Main Image</label>
-          <div onClick={() => isEditing && mainFileRef.current.click()} className={`relative border-2 border-dashed rounded-2xl h-full min-h-[200px] flex items-center justify-center bg-black/20 overflow-hidden ${isEditing ? 'border-cyan-500 cursor-pointer group' : 'border-gray-800'}`}>
-            <input type="file" ref={mainFileRef} onChange={(e) => handleImageUpdate('mainImage', e)} className="hidden" />
-            <img src={showReference ? "./hero.png" : content.mainImage} className="max-h-full object-contain p-2" alt="Hero" />
-            {isEditing && <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><HiOutlineUpload className="text-cyan-400 text-2xl" /></div>}
-          </div>
-        </div> */}
+        <div className="grid grid-cols-1 gap-4">
+          {content.cards?.map((card, index) => (
+            <div
+              key={index}
+              className={`bg-[#0b1318] border rounded-xl p-4 ${
+                isEditing ? "border-cyan-400/30" : "border-gray-800"
+              }`}
+            >
+              {/* Card Number Badge */}
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-xs font-bold text-cyan-400 bg-cyan-400/10 px-2 py-1 rounded">
+                  Card {index + 1}
+                </span>
+                {isEditing && (
+                  <button
+                    onClick={() => removeCard(index)}
+                    className="text-red-400 hover:text-red-300 transition-all"
+                  >
+                    <HiOutlineTrash size={18} />
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                {/* Name */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[9px] text-gray-500 font-bold uppercase">Name</label>
+                  <input
+                    disabled={!isEditing}
+                    value={card.name}
+                    onChange={(e) => updateCard(index, "name", e.target.value)}
+                    placeholder="Client Name"
+                    className={`bg-transparent border rounded-lg px-3 py-2 text-sm outline-none text-white ${
+                      isEditing ? "border-cyan-400/30" : "border-gray-800"
+                    }`}
+                  />
+                </div>
+
+                {/* Company */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[9px] text-gray-500 font-bold uppercase">Company</label>
+                  <input
+                    disabled={!isEditing}
+                    value={card.company}
+                    onChange={(e) => updateCard(index, "company", e.target.value)}
+                    placeholder="Company Name"
+                    className={`bg-transparent border rounded-lg px-3 py-2 text-sm outline-none text-white ${
+                      isEditing ? "border-cyan-400/30" : "border-gray-800"
+                    }`}
+                  />
+                </div>
+
+                {/* Stars (visual placeholder) */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[9px] text-gray-500 font-bold uppercase">Rating</label>
+                  <div className="flex items-center gap-1 text-cyan-400">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i}>{star}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial Text */}
+              <div className="mt-3">
+                <label className="text-[9px] text-gray-500 font-bold uppercase">Testimonial Text</label>
+                <textarea
+                  disabled={!isEditing}
+                  value={card.text}
+                  onChange={(e) => updateCard(index, "text", e.target.value)}
+                  placeholder="Enter testimonial text..."
+                  rows="3"
+                  className={`w-full bg-transparent border rounded-lg p-3 text-sm outline-none text-gray-300 mt-1 ${
+                    isEditing ? "border-cyan-400/30" : "border-gray-800"
+                  }`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      {/* --- HARDCODED CARDS (2x2) --- */}
-      <div className="">
-        <h1 className="mb-3">Testimonial Cards</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {/* CARD 1 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex flex-col gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-100 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="c1_title"
-                value={content.c1_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <input disabled={!isEditing} name="c1_subtitle" value={content.c1_subtitle} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <textarea
-                disabled={!isEditing}
-                name="c1_desc"
-                value={content.c1_desc}
-                onChange={handleChange}
-                placeholder="Desc"
-                rows="6"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
+
+      {/* --- PREVIEW --- */}
+      {!isEditing && (
+        <div className="border-t border-gray-800 pt-6">
+          <h3 className="text-sm font-bold text-cyan-400 mb-4">Preview</h3>
+          <div className="bg-gray-900/50 rounded-xl p-6 space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white text-center">{content.heading}</h2>
             </div>
-          </div>
-          {/* CARD 2 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex flex-col gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-100 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="c2_title"
-                value={content.c2_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <input disabled={!isEditing} name="c2_subtitle" value={content.c2_subtitle} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <textarea
-                disabled={!isEditing}
-                name="c2_desc"
-                value={content.c2_desc}
-                onChange={handleChange}
-                placeholder="Desc"
-                rows="6"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
-            </div>
-          </div>
-          {/* CARD 3 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex flex-col gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-100 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="c3_title"
-                value={content.c3_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <input disabled={!isEditing} name="c3_subtitle" value={content.c3_subtitle} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <textarea
-                disabled={!isEditing}
-                name="c3_desc"
-                value={content.c3_desc}
-                onChange={handleChange}
-                placeholder="Desc"
-                rows="6"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
-            </div>
-          </div>
-          {/* CARD 4 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex flex-col gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-100 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="c4_title"
-                value={content.c4_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <input disabled={!isEditing} name="c4_subtitle" value={content.c4_subtitle} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <textarea
-                disabled={!isEditing}
-                name="c4_desc"
-                value={content.c4_desc}
-                onChange={handleChange}
-                placeholder="Desc"
-                rows="6"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
-            </div>
-          </div>
-          {/* CARD 5 */}
-          <div
-            className={`bg-[#0b1318] border rounded-2xl p-5 flex flex-col gap-5 ${
-              isEditing ? "border-cyan-400/30" : "border-gray-800"
-            }`}
-          >
-            {/* <div className="relative w-100 h-28 flex-shrink-0 bg-black rounded-xl overflow-hidden group">
-              <img
-                src={showReference ? "./ab-1.png" : content.c1_img}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-              {isEditing && (
-                <label className="absolute inset-0 bg-black/60 flex items-center justify-center cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(e) => handleImageUpdate("c1_img", e)}
-                  />
-                  <HiOutlineUpload className="text-cyan-400" />
-                </label>
-              )}
-            </div> */}
-            <div className="flex flex-col gap-2 flex-1">
-              <input
-                disabled={!isEditing}
-                name="c5_title"
-                value={content.c5_title}
-                onChange={handleChange}
-                placeholder="Title"
-                className="bg-transparent border-b border-gray-800 text-sm font-bold outline-none text-white focus:border-cyan-400"
-              />
-              <input disabled={!isEditing} name="c5_subtitle" value={content.c5_subtitle} onChange={handleChange} placeholder="Link" className="bg-transparent border border-gray-800 rounded-lg px-2 py-1 text-[10px] outline-none text-gray-400" />
-              <textarea
-                disabled={!isEditing}
-                name="c5_desc"
-                value={content.c5_desc}
-                onChange={handleChange}
-                placeholder="Desc"
-                rows="6"
-                className="bg-transparent border border-gray-800 rounded-lg p-2 text-[11px] outline-none text-gray-400"
-              />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+              {content.cards?.map((card, i) => (
+                <div key={i} className="bg-black/50 rounded-lg p-4 border border-gray-800 space-y-2">
+                  <div className="flex gap-1 text-cyan-400">{"★★★★★".split("").map((s, j) => <span key={j}>{s}</span>)}</div>
+                  <p className="text-xs text-gray-300 line-clamp-3">{card.text}</p>
+                  <div className="pt-2 border-t border-gray-700">
+                    <p className="text-xs font-bold text-white">{card.name}</p>
+                    <p className="text-[10px] text-gray-400">{card.company}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

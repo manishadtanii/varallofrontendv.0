@@ -4,7 +4,7 @@ import {
   HiOutlineUpload,
   HiOutlineSave,
   HiOutlinePencilAlt,
-  HiOutlineLockClosed,
+  HiOutlineX,
   HiOutlineEye,
 } from "react-icons/hi";
 
@@ -12,6 +12,8 @@ const Testimonials = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showReference, setShowReference] = useState(false);
   const mainFileRef = useRef(null);
+
+  console.log("📍 Testimonials sectionData:", sectionData);
 
   // State initialized with individual keys for absolute clarity
   const [content, setContent] = useState({
@@ -60,6 +62,29 @@ const Testimonials = ({ sectionData, onSave }) => {
     setContent((prev) => ({ ...prev, [key]: url, [`${key}File`]: file }));
   };
 
+  const handleCancel = () => {
+    setContent({
+      heading: sectionData?.heading || "Why Our Clients Choose Us Again & Again",
+      c1_title: sectionData?.c1_title || "Michael Scire",
+      c1_subtitle: sectionData?.c1_subtitle || "Florida Court Reporters Association",
+      c1_desc: sectionData?.c1_desc || "Such a great experience working with The Varallo Group. I cannot say enough wonderful things about each of you. You are all professional, helpful, efficient, and respectful. You all jumped right in and often offered help when I didn't realize I needed it. The conference ran seamlessly. Thank you from the bottom of my heart.",
+      c2_title: sectionData?.c2_title || "Ray Catuogno, Jr.",
+      c2_subtitle: sectionData?.c2_subtitle || "Real Time Court Reporting",
+      c2_desc: sectionData?.c2_desc || "I don't get an opportunity to say it often enough, but I really appreciate the effort and hard work that everyone puts into making my business operations run smoothly. My work to establish the business was done long ago, and now it's everyone else's work that continues to make the business a success. So thanks for the big things that are a pain to do, and thanks for the little things that don't get as much notice but are just as important.",
+      c3_title: sectionData?.c3_title || "Pam Owen",
+      c3_subtitle: sectionData?.c3_subtitle || "BOSS Reporters",
+      c3_desc: sectionData?.c3_desc || "I am so appreciative of what you have taught me and for all of your efforts. I am very pleased with the progress we've made together and grateful for your positivity and eagerness to get 'all the ducks in a row.' I am optimistic and very excited about the future, and know I am lucky to have found you.",
+      c4_title: sectionData?.c4_title || "Mary Beth Johnson",
+      c4_subtitle: sectionData?.c4_subtitle || "Community College of Allegheny County",
+      c4_desc: sectionData?.c4_desc || "May I begin by thanking you for a lifetime of work on behalf of Steno reporting. Your brilliance in creating A to Z and Basic Training saved our profession. As a result of your initiative, we now teach students from Oregon to Atlanta. You had vision, and I am grateful for your foresight.",
+      c5_title: sectionData?.c5_title || "Michael Lewis",
+      c5_subtitle: sectionData?.c5_subtitle || "Discovery Legal Services",
+      c5_desc: sectionData?.c5_desc || "Working with The Varallo Group and Cedar Bushong has been an excellent experience. Their team handled our website development with precision, creating a site that truly reflects our brand and meets our needs. Beyond the initial development, their ongoing support has been invaluable. They are consistently responsive and supportive, addressing any issues promptly and helping us adapt our site as our business evolves. We couldn't be happier with their dedication and commitment to our success. Highly recommend!",
+    });
+    setIsEditing(false);
+    toast.success("Changes discarded");
+  };
+
   return (
     <div className="flex flex-col gap-8 font-manrope">
       <Toaster />
@@ -72,27 +97,32 @@ const Testimonials = ({ sectionData, onSave }) => {
         </div>
 
         <div className="flex gap-3">
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border ${
-              isEditing
-                ? "bg-gray-800 border-gray-700 text-white"
-                : "bg-cyan-500 text-black border-cyan-400"
-            }`}
-          >
-            {isEditing ? <HiOutlineLockClosed /> : <HiOutlinePencilAlt />}
-            {isEditing ? "LOCK" : "EDIT"}
-          </button>
-          {isEditing && (
+          {!isEditing ? (
             <button
-              onClick={() => {
-                onSave(content);
-                setIsEditing(false);
-              }}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              onClick={() => setIsEditing(true)}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-cyan-500 text-black border-cyan-400`}
             >
-              <HiOutlineSave /> SAVE
+              <HiOutlinePencilAlt />
+              EDIT
             </button>
+          ) : (
+            <>
+              <button
+                onClick={handleCancel}
+                className="flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all border bg-gray-800 border-gray-700 text-white hover:bg-gray-700"
+              >
+                <HiOutlineX /> CANCEL
+              </button>
+              <button
+                onClick={() => {
+                  onSave(content);
+                  setIsEditing(false);
+                }}
+                className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
+              >
+                <HiOutlineSave /> SAVE
+              </button>
+            </>
           )}
         </div>
       </div>
