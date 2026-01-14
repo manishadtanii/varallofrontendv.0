@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import SectionEditor from "../components/SectionEditor"; // The component created in the previous step
 import MediaLibraryModal from "../components/MediaLibraryModal";
 import ContactSubmissions from "../components/ContactSubmissions";
+import LoadingScreen from "../components/LoadingScreen";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
@@ -61,41 +62,105 @@ const Dashboard = () => {
 
   // Fetch all page data on component mount
   useEffect(() => {
-    const fetchAllPagesData = async () => {
+    const fetchCriticalPagesOnly = async () => {
       try {
         setLoading(true);
-        const pagesResponse = await pageAPI.getPages();
         
-        if (pagesResponse.data && Array.isArray(pagesResponse.data)) {
-          // Organize pages by slug for easy access
-          const pageMap = {};
-          
-          for (const page of pagesResponse.data) {
-            const pageData = await pageAPI.getPageBySlug(page.slug);
-            if (pageData.data) {
-              pageMap[page.slug] = pageData.data;
-              console.log(`📖 Loaded page: ${page.slug}`, {
-                sections: pageData.data.sections?.map(s => ({
-                  sectionKey: s.sectionKey,
-                  hasContent: !!s.content
-                }))
+        // CRITICAL PAGES - Load immediately (Home + Contact for forms)
+        const criticalPages = ['home', 'contact'];
+        const pageMap = {};
+        
+        console.log('⚡ Loading CRITICAL pages only:', criticalPages);
+        
+        // Load critical pages in parallel (faster)
+        const criticalPromises = criticalPages.map(async (slug) => {
+          try {
+            const result = await pageAPI.getPageBySlug(slug);
+            if (result?.data) {
+              pageMap[slug] = result.data;
+              console.log(`✅ Loaded critical page: ${slug}`);
+            }
+          } catch (err) {
+            console.error(`❌ Failed to load ${slug}:`, err);
+          }
+        });
+        
+        await Promise.all(criticalPromises);
+        
+        setCmsData(pageMap);
+        console.log('✅ Critical pages loaded, app ready!', pageMap);
+        
+        // BACKGROUND: Fetch all page list for sidebar (non-blocking)
+        setTimeout(async () => {
+          try {
+            const pagesResponse = await pageAPI.getPages();
+            if (pagesResponse.data && Array.isArray(pagesResponse.data)) {
+              console.log('📋 Pages list available in background');
+              // Optionally pre-fetch home + about in background
+              const nonCritical = ['about', 'service'];
+              nonCritical.forEach(async (slug) => {
+                try {
+                  const result = await pageAPI.getPageBySlug(slug);
+                  if (result?.data) {
+                    setCmsData((prev) => ({ ...prev, [slug]: result.data }));
+                    console.log(`📚 Pre-loaded in background: ${slug}`);
+                  }
+                } catch (err) {
+                  console.error(`⚠️ Background load failed for ${slug}`);
+                }
               });
             }
+          } catch (error) {
+            console.error('⚠️ Background page list load failed');
           }
-          
-          setCmsData(pageMap);
-          console.log('✅ All CMS data loaded:', pageMap);
-        }
+        }, 500); // Delay so it doesn't block initial render
+        
       } catch (error) {
-        console.error('❌ Failed to load CMS data:', error);
-        toast.error('Failed to load page data');
+        console.error('❌ Critical data load failed:', error);
+        toast.error('Failed to load critical data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAllPagesData();
+    fetchCriticalPagesOnly();
   }, []);
+
+  // Ensure service subpages are loaded when activePage is a service slug (tvg-*)
+  useEffect(() => {
+    const loadPageOnDemand = async () => {
+      if (!activePage) return;
+      
+      // Skip if already loaded
+      if (cmsData[activePage]) {
+        console.log(`✅ ${activePage} already loaded`);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log(`📡 Lazy loading page on demand: ${activePage}`);
+        
+        // Determine if it's a service page
+        const isServicePage = activePage.startsWith('tvg-');
+        const result = isServicePage 
+          ? await pageAPI.getServiceBySlug(activePage)
+          : await pageAPI.getPageBySlug(activePage);
+        
+        if (result?.data) {
+          setCmsData((prev) => ({ ...prev, [activePage]: result.data }));
+          console.log(`✅ Loaded on demand: ${activePage}`);
+        }
+      } catch (err) {
+        console.error(`❌ Failed to load ${activePage}:`, err);
+        toast.error(`Failed to load ${activePage}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPageOnDemand();
+  }, [activePage, cmsData]);
 
   // Toggle function to switch between pages
   const toggle = (pageName) => {
@@ -288,6 +353,7 @@ const Dashboard = () => {
           <AgencyManagement
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Service Overview":
@@ -295,6 +361,7 @@ const Dashboard = () => {
           <ServiceOverview
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "What We Offer":
@@ -302,6 +369,7 @@ const Dashboard = () => {
           <WhatWeOffer
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "What We Provide":
@@ -309,6 +377,7 @@ const Dashboard = () => {
           <WhatWeProvide
             sectionData={activeSectionData}
             onSave={handleUpdateSection}
+            onBrowseLibrary={openMediaLibraryForField}
           />
         );
       case "Contact Submissions":
@@ -352,6 +421,23 @@ const Dashboard = () => {
         } else if (sectionKey === 'all-service') {
           sectionKey = 'services-grid';
           console.log(`🔄 Converted "All Service" → "services-grid"`);
+        }
+      }
+
+      // Handle special cases for service subpages (TVG services)
+      if (activePage && activePage.startsWith('tvg-')) {
+        if (sectionKey === 'agency-management') {
+          sectionKey = 'hero';
+          console.log(`🔄 Converted "Agency Management" → "hero"`);
+        } else if (sectionKey === 'service-overview') {
+          sectionKey = 'overview';
+          console.log(`🔄 Converted "Service Overview" → "overview"`);
+        } else if (sectionKey === 'what-we-offer') {
+          sectionKey = 'tvgEffect';
+          console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
+        } else if (sectionKey === 'what-we-provide') {
+          sectionKey = 'provide';
+          console.log(`🔄 Converted "What We Provide" → "provide"`);
         }
       }
 
@@ -434,6 +520,23 @@ const Dashboard = () => {
       }
     }
 
+    // Handle special cases for service subpages (TVG services)
+    if (activePage && activePage.startsWith('tvg-')) {
+      if (sectionKey === 'agency-management') {
+        sectionKey = 'hero';
+        console.log(`🔄 Converted "Agency Management" → "hero"`);
+      } else if (sectionKey === 'service-overview') {
+        sectionKey = 'overview';
+        console.log(`🔄 Converted "Service Overview" → "overview"`);
+      } else if (sectionKey === 'what-we-offer') {
+        sectionKey = 'tvgEffect';
+        console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
+      } else if (sectionKey === 'what-we-provide') {
+        sectionKey = 'provide';
+        console.log(`🔄 Converted "What We Provide" → "provide"`);
+      }
+    }
+
     // Handle special cases for Contact page sections
     if (activePage === 'contact') {
       if (sectionKey === 'start-your-journey') {
@@ -487,14 +590,7 @@ const Dashboard = () => {
 
   // Show loading state
   if (loading) {
-    return (
-      <div className="flex min-h-screen bg-[#05080a] text-white items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
-          <p className="text-gray-400">Loading CMS data...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading CMS data..." />;
   }
 
   return (
@@ -691,16 +787,16 @@ const Dashboard = () => {
               )}
             </div>
 
- {/* <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1 mt-5 px-2">
+ <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1 mt-5 px-2">
               Service Details
-            </p> */}
+            </p>
 
             {/* Management Toggle */}
-            {/* <div className="mb-2">
+            <div className="mb-2">
               <button
                 onClick={() => toggle("management")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${
-                  activePage === "services/tvg-management"
+                  (activePage && activePage.startsWith('tvg-'))
                     ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
                     : "text-gray-400 border-transparent"
                 }`}
@@ -729,12 +825,12 @@ const Dashboard = () => {
                     <button
                       key={sec}
                       onClick={() => {
-                        setActivePage("services/tvg-management");
+                        setActivePage("tvg-management");
                         setActiveId(sec);
                       }}
                       className={`text-left px-4 py-2 text-xs font-medium transition-all ${
                         activeId === sec &&
-                        activePage === "services/tvg-management"
+                        activePage === "tvg-management"
                           ? "text-cyan-400 border-l-2 border-cyan-400 -ml-[2px]"
                           : "text-gray-500 hover:text-white"
                       }`}
@@ -744,7 +840,9 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div> */}
+            </div>
+
+
             {/* Stream Toggle */}
             {/* <div className="mb-2">
               <button

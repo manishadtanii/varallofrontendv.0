@@ -1,27 +1,55 @@
 import React, { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineEye } from "react-icons/hi";
+import { HiOutlineUpload, HiOutlineSave, HiOutlinePencilAlt, HiOutlineX, HiOutlineViewGridAdd } from "react-icons/hi";
 
 const WhatWeProvide = ({ sectionData, onSave }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showReference, setShowReference] = useState(false);
   const mainFileRef = useRef(null);
+
+  // Map backend data to local state
+  const mapSectionToContent = (sd) => ({
+    heading: sd?.title || sd?.heading || "What We Provide",
+    para: sd?.para || sd?.subtext || "We manage your back office so you can focus on delivering top-tier client service. From scheduling to payroll, we streamline the chaos behind the scenes.",
+    wwp1: sd?.wwp1 || "Client Onboarding Assistance",
+    wwp2: sd?.wwp2 || "Vendor Coordination",
+    wwp3: sd?.wwp3 || "Transcript & Exhibit Handling",
+    wwp4: sd?.wwp4 || "Billing, Collections & Payroll",
+    wwp5: sd?.wwp5 || "Branding & Marketing Help",
+    tagsLeft: sd?.tagsLeft || [
+      { text: "Vendor Coordination" },
+      { text: "Branding & Marketing Help" },
+      { text: "Client Onboarding Assistance" },
+      { text: "Branding & Marketing Help" },
+      { text: "Vendor Coordination" },
+      { text: "Transcript & Exhibit Handling" },
+    ],
+    tagsRight: sd?.tagsRight || [
+      { text: "Billing, Collections & Payroll" },
+      { text: "Transcript & Exhibit Handling" },
+      { text: "Vendor Coordination" },
+      { text: "Branding & Marketing Help" },
+      { text: "Client Onboarding Assistance" },
+      { text: "Branding & Marketing Help" },
+    ],
+  });
+
+  console.log("WhatWeProvide sectionData:", sectionData);
   
   // State initialized with individual keys for absolute clarity
-  const [content, setContent] = useState({
-    heading: sectionData?.heading || "What We Provide",
-    subtext: sectionData?.subtext || "We manage your back office so you can focus on delivering top-tier client service. From scheduling to payroll, we streamline the chaos behind the scenes.",
-    // Card 1
-    wwp1: sectionData?.wwp1 || "Client onboarding assistance",
-    wwp2: sectionData?.wwp2 || "Scheduling and Calendar Support",
-    wwp3: sectionData?.wwp3 || "Operations reporting & performance",
-    wwp4: sectionData?.wwp4 || "Vendor coordination",
-    wwp5: sectionData?.wwp5 || "Branding & marketing help",
-  });
+  const [content, setContent] = useState(mapSectionToContent(sectionData));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setContent((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTagChange = (side, index, value) => {
+    setContent((prev) => {
+      const updated = { ...prev };
+      updated[side][index].text = value;
+      return updated;
+    });
   };
 
    const handleImageUpdate = (key, e) => {
@@ -37,27 +65,19 @@ const WhatWeProvide = ({ sectionData, onSave }) => {
   };
 
   const handleCancel = () => {
-    setContent({
-      heading: sectionData?.heading || "What We Provide",
-      subtext: sectionData?.subtext || "We manage your back office so you can focus on delivering top-tier client service. From scheduling to payroll, we streamline the chaos behind the scenes.",
-      wwp1: sectionData?.wwp1 || "Client onboarding assistance",
-      wwp2: sectionData?.wwp2 || "Scheduling and Calendar Support",
-      wwp3: sectionData?.wwp3 || "Operations reporting & performance",
-      wwp4: sectionData?.wwp4 || "Vendor coordination",
-      wwp5: sectionData?.wwp5 || "Branding & marketing help",
-    });
+    setContent(mapSectionToContent(sectionData));
     setIsEditing(false);
     toast.success("Changes discarded");
   };
 
   return (
     <div className="flex flex-col gap-8 font-manrope">
-        <Toaster />
+      <Toaster />
+      
       {/* --- HEADER --- */}
       <div className="flex justify-between items-center border-b border-gray-800 pb-4">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">Section Editor</h2>
-          
+          <h2 className="text-xl font-bold text-cyan-400 uppercase tracking-wider">What We Provide Editor</h2>
         </div>
         
         <div className="flex gap-3">
@@ -78,7 +98,22 @@ const WhatWeProvide = ({ sectionData, onSave }) => {
                 <HiOutlineX /> CANCEL
               </button>
               <button
-                onClick={() => { onSave(content); setIsEditing(false); }}
+                onClick={async () => {
+                  const payload = {
+                    title: content.heading,
+                    para: content.para,
+                    wwp1: content.wwp1,
+                    wwp2: content.wwp2,
+                    wwp3: content.wwp3,
+                    wwp4: content.wwp4,
+                    wwp5: content.wwp5,
+                    tagsLeft: content.tagsLeft,
+                    tagsRight: content.tagsRight,
+                  };
+                  console.log('💾 WhatWeProvide final payload:', payload);
+                  await onSave(payload);
+                  setIsEditing(false);
+                }}
                 className="flex items-center gap-2 bg-green-500 hover:bg-green-400 text-black px-6 py-2 rounded-full font-bold transition-all shadow-lg"
               >
                 <HiOutlineSave /> SAVE
@@ -89,43 +124,97 @@ const WhatWeProvide = ({ sectionData, onSave }) => {
       </div>
 
       {/* --- MAIN SECTION --- */}
-      <div className="grid grid-cols-1  gap-6">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Main Heading</label>
-            <input disabled={!isEditing} name="wwp1" value={content.heading} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
+            <input disabled={!isEditing} name="heading" value={content.heading} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Paragraph Text</label>
-            <textarea disabled={!isEditing} name="subtext" value={content.subtext} placeholder="" onChange={handleChange} rows="2" className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
+            <textarea disabled={!isEditing} name="para" value={content.para} placeholder="" onChange={handleChange} rows="2" className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
           </div>
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Slider Text</label>
-          <div className="grid grid-cols-2
-           md:grid-cols-3 lg:grid-cols-5 gap-2">
-            <input disabled={!isEditing} name="wwp1" value={content.wwp1} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            <input disabled={!isEditing} name="wwp2" value={content.wwp2} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            <input disabled={!isEditing} name="wwp3" value={content.wwp3} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            <input disabled={!isEditing} name="wwp4" value={content.wwp4} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            <input disabled={!isEditing} name="wwp5" value={content.wwp5} placeholder="" onChange={handleChange} className={`w-full bg-transparent border rounded-xl px-4 py-2 outline-none transition-all ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-          </div>
-          
-          {/* <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-            <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">CTA Text</label>
-            <input disabled={!isEditing} placeholder="" name="ctaText" value={content.ctaText} onChange={handleChange} className={`bg-transparent border rounded-xl px-4 py-2 outline-none ${isEditing ? 'border-cyan-400' : 'border-gray-800 text-gray-400'}`} />
-            </div>
-          </div> */}
-        </div>
 
-        {/* <div className="relative ">
-          <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Main Image</label>
-          <div onClick={() => isEditing && mainFileRef.current.click()} className={`relative border-2 border-dashed rounded-2xl h-full min-h-[200px] max-h-[320px] flex items-center justify-center bg-black/20 overflow-hidden ${isEditing ? 'border-cyan-500 cursor-pointer group' : 'border-gray-800'}`}>
-            <input type="file" ref={mainFileRef} onChange={(e) => handleImageUpdate('mainImage', e)} className="hidden" />
-            <img src={showReference ? "./hero.png" : content.mainImage} className="max-h-full object-contain p-2" alt="Hero" />
-            {isEditing && <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><HiOutlineUpload className="text-cyan-400 text-2xl" /></div>}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Tags Left */}
+            <div className="flex flex-col gap-3">
+              <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Tags Left (6 items)</label>
+              <div className="space-y-2">
+                {content.tagsLeft?.map((tag, idx) => (
+                  <input
+                    key={`tagsLeft-${idx}`}
+                    disabled={!isEditing}
+                    value={tag?.text || ""}
+                    onChange={(e) => handleTagChange("tagsLeft", idx, e.target.value)}
+                    placeholder={`Tag ${idx + 1}`}
+                    className={`w-full bg-transparent border rounded-lg px-4 py-2 outline-none transition-all ${
+                      isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Tags Right */}
+            <div className="flex flex-col gap-3">
+              <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Tags Right (6 items)</label>
+              <div className="space-y-2">
+                {content.tagsRight?.map((tag, idx) => (
+                  <input
+                    key={`tagsRight-${idx}`}
+                    disabled={!isEditing}
+                    value={tag?.text || ""}
+                    onChange={(e) => handleTagChange("tagsRight", idx, e.target.value)}
+                    placeholder={`Tag ${idx + 1}`}
+                    className={`w-full bg-transparent border rounded-lg px-4 py-2 outline-none transition-all ${
+                      isEditing ? "border-cyan-400" : "border-gray-800 text-gray-400"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </div> */}
+        </div>
       </div>
+
+      {/* --- FULL PREVIEW SECTION (Only when NOT editing) --- */}
+      {!isEditing && (
+        <div className="border-t border-gray-800 pt-6">
+          <h3 className="text-sm font-bold text-cyan-400 mb-4">Preview</h3>
+          <div className="bg-gray-900/50 rounded-xl p-6 space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-2">{content.heading}</h2>
+              <p className="text-sm text-gray-300 leading-relaxed">{content.para}</p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Tags Left Column */}
+              <div>
+                <p className="text-xs text-gray-400 font-bold uppercase mb-3">Left Column Tags</p>
+                <div className="flex flex-wrap gap-2">
+                  {content.tagsLeft?.map((tag, idx) => (
+                    <span key={idx} className="px-3 py-2 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 rounded-lg text-xs">
+                      {tag?.text}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags Right Column */}
+              <div>
+                <p className="text-xs text-gray-400 font-bold uppercase mb-3">Right Column Tags</p>
+                <div className="flex flex-wrap gap-2">
+                  {content.tagsRight?.map((tag, idx) => (
+                    <span key={idx} className="px-3 py-2 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 rounded-lg text-xs">
+                      {tag?.text}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

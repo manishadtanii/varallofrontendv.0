@@ -20,7 +20,7 @@ export const pageAPI = {
   getPages: async () => {
     try {
       console.log('📄 Fetching all pages from backend...');
-      const response = await fetch(`${API_BASE_URL}/pages/`, {
+      const response = await fetch(`${API_BASE_URL}/pages/`, {  
         method: 'GET',
         credentials: 'include',
       });

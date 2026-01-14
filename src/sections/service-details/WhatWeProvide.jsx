@@ -8,7 +8,8 @@ const WhatWeProvide = ({ data }) => {
   if (!data) return null;
   console.log("WhatWeProvide data:", data);
   const { title, para, tagsLeft, tagsRight } = data;
-
+  console.log("Tags Left:", tagsLeft);
+  console.log("Tags Right:", tagsRight);
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 40 },
     visible: (i = 1) => ({
