@@ -25,7 +25,7 @@ const ServiceOverview = ({ data }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          What We Offer
+          {title}
         </motion.h2>
 
         <div className="max-w-7xl m-auto">

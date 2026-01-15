@@ -90,6 +90,10 @@ export const sectionAPI = {
     try {
       console.log(`🔧 Updating section: ${pageSlug}/${sectionKey}`);
 
+      // Extract actual slug for service pages (tvg-stream from services/tvg-stream)
+      const actualSlug = pageSlug.includes('/') ? pageSlug.split('/').pop() : pageSlug;
+      console.log(`📄 Actual slug being used: ${actualSlug} (from ${pageSlug})`);
+
       const formData = new FormData();
 
       // Add content data as JSON strings
@@ -113,7 +117,7 @@ export const sectionAPI = {
       }
 
       const response = await fetch(
-        `${API_BASE_URL}/pages/sections/${pageSlug}/${sectionKey}`,
+        `${API_BASE_URL}/pages/sections/${actualSlug}/${sectionKey}`,
         {
           method: 'PATCH',
           credentials: 'include',

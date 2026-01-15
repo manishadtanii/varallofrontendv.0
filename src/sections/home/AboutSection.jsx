@@ -14,7 +14,7 @@ const AboutSection = ({ data }) => {
       <div className="container-fluid">
         <div className=" mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column */}
-          <div className="space-y-8 col-span-2">
+          <div className="space-y-8 col-span-2 ">
             <motion.div
               className="flex md:items-center flex-col md:flex-row gap-5 md:gap-12"
               initial={{ opacity: 0, y: 40 }}
@@ -22,12 +22,12 @@ const AboutSection = ({ data }) => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="md:w-[50%] text-4xl md:text-5xl font-medium leading-tight font-parkinsans">
+              <h2 className="md:w-[40%] text-4xl md:text-5xl font-medium leading-tight font-parkinsans">
                {data.title}
                
                
               </h2>
-              <div className="md:w-[35%] ms-auto">
+              <div className="md:w-[49%] ms-auto ">
                 <h3 className="text-xl md:text-2xl font-manrope">
                {data.subHeading}
 

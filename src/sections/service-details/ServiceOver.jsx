@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 
 const ServiceOver = ({ data }) => {
    if (!data) return null;
-  // console.log("Service Over data:", data);
-  const { heading, img, para1, para2,title} = data;
+  console.log("Service Over data:", data);
+  const { heading, img, para1, para2, subHeading } = data;
   return (
     <section className="bg-white">
       <div className="container-fluid">
@@ -50,7 +50,7 @@ const ServiceOver = ({ data }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                {title}
+                {subHeading}
               </motion.p>
             </div>
 
