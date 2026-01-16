@@ -234,14 +234,14 @@ const Testimonials = ({ sectionData, onSave }) => {
                 </div>
 
                 {/* Stars (visual placeholder) */}
-                <div className="flex flex-col gap-1">
+                {/* <div className="flex flex-col gap-1">
                   <label className="text-[9px] text-gray-500 font-bold uppercase">Rating</label>
                   <div className="flex items-center gap-1 text-cyan-400">
                     {"★★★★★".split("").map((star, i) => (
                       <span key={i}>{star}</span>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Testimonial Text */}

@@ -13,19 +13,38 @@ const ReportingWhatWeProvide = ({ sectionData, onSave }) => {
 
   console.log("ReportingWhatWeProvide sectionData:", sectionData);
 
-  const normalizeTags = (tagsArray) => {
-    if (!Array.isArray(tagsArray)) return [];
-    return tagsArray.map((tag) =>
-      typeof tag === "string" ? { text: tag } : tag
-    );
-  };
+  const mapSectionToContent = (sd) => {
+    console.log('🔍 ReportingWhatWeProvide mapping received:', sd);
+    console.log('   tagsLeft:', sd?.tagsLeft);
+    console.log('   tagsRight:', sd?.tagsRight);
+    
+    // Ensure tags are always objects with { text: "..." } structure
+    const normalizeTagsToObjects = (tags) => {
+      if (!Array.isArray(tags)) return [];
+      return tags.map(tag => {
+        if (typeof tag === 'string') {
+          return { text: tag };
+        }
+        return tag; // Already an object
+      });
+    };
 
-  const mapSectionToContent = (sd) => ({
-    heading: sd?.title || "What We Provide",
-    para: sd?.para || "Comprehensive reporting solutions for your organization.",
-    tagsLeft: normalizeTags(sd?.tagsLeft || []),
-    tagsRight: normalizeTags(sd?.tagsRight || []),
-  });
+    const mapped = {
+      heading: sd?.title || sd?.heading || "What We Provide",
+      para: sd?.para || sd?.description || "",
+      tagsLeft: normalizeTagsToObjects(sd?.tagsLeft || []),
+      tagsRight: normalizeTagsToObjects(sd?.tagsRight || []),
+    };
+    
+    console.log('✅ ReportingWhatWeProvide mapped:', {
+      heading: mapped.heading,
+      para: mapped.para.substring(0, 50) + '...',
+      tagsLeft: mapped.tagsLeft,
+      tagsRight: mapped.tagsRight
+    });
+    
+    return mapped;
+  };
 
   const [content, setContent] = useState(mapSectionToContent(sectionData));
 
@@ -106,8 +125,8 @@ const ReportingWhatWeProvide = ({ sectionData, onSave }) => {
                     const payload = {
                       title: content.heading,
                       para: content.para,
-                      tagsLeft: content.tagsLeft.map((tag) => tag.text).filter(Boolean),
-                      tagsRight: content.tagsRight.map((tag) => tag.text).filter(Boolean),
+                      tagsLeft: content.tagsLeft,
+                      tagsRight: content.tagsRight,
                     };
 
                     console.log('💾 ReportingWhatWeProvide final payload:', payload);

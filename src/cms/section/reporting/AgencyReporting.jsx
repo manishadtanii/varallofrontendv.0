@@ -25,7 +25,6 @@ const AgencyReporting = ({ sectionData, onSave, onBrowseLibrary }) => {
     mainImage1: sd?.images?.[0] || "./hero.png",
     mainImage2: sd?.images?.[1] || "./hero.png",
     mainImage3: sd?.images?.[2] || "./hero.png",
-    mainImage4: sd?.images?.[3] || "./hero.png",
   });
 
   const [content, setContent] = useState(mapSectionToContent(sectionData));
@@ -112,7 +111,7 @@ const AgencyReporting = ({ sectionData, onSave, onBrowseLibrary }) => {
                   try {
                     toast.loading('Uploading images...', { id: 'upload' });
 
-                    const filesToCheck = ['mainImage1', 'mainImage2', 'mainImage3', 'mainImage4'];
+                    const filesToCheck = ['mainImage1', 'mainImage2', 'mainImage3'];
 
                     for (const key of filesToCheck) {
                       const fileKey = `${key}File`;
@@ -135,7 +134,7 @@ const AgencyReporting = ({ sectionData, onSave, onBrowseLibrary }) => {
                       title: content.heading,
                       para: content.desc,
                       cta: { label: content.ctaText },
-                      images: [content.mainImage1, content.mainImage2, content.mainImage3, content.mainImage4].filter(Boolean),
+                      images: [content.mainImage1, content.mainImage2, content.mainImage3].filter(Boolean),
                     };
 
                     console.log('💾 AgencyReporting final payload (after uploads):', payload);
@@ -213,9 +212,9 @@ const AgencyReporting = ({ sectionData, onSave, onBrowseLibrary }) => {
             </div>
         </div>
 
-        {/* --- RIGHT COLUMN: 4-IMAGE GRID --- */}
+        {/* --- RIGHT COLUMN: 3-IMAGE GRID --- */}
         <div className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map((num) => {
+          {[1, 2, 3].map((num) => {
             const imageKey = `mainImage${num}`;
             const displayNum = num === 4 ? 4 : num === 3 ? 3 : num === 2 ? 2 : 1;
             return (
@@ -277,11 +276,10 @@ const AgencyReporting = ({ sectionData, onSave, onBrowseLibrary }) => {
                 {content.ctaText}
               </button>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
               <img src={content.mainImage1} alt="Image 1" className="w-full h-40 object-cover rounded-lg" />
               <img src={content.mainImage2} alt="Image 2" className="w-full h-40 object-cover rounded-lg" />
               <img src={content.mainImage3} alt="Image 3" className="w-full h-40 object-cover rounded-lg" />
-              <img src={content.mainImage4} alt="Image 4" className="w-full h-40 object-cover rounded-lg" />
             </div>
           </div>
         </div>

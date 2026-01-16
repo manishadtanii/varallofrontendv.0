@@ -15,6 +15,7 @@
     "@gsap/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.9.0",
     "aos": "^2.3.4",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",

@@ -17,18 +17,13 @@ const ReportingServiceOverview = ({ sectionData, onSave, onBrowseLibrary }) => {
   console.log("ReportingServiceOverview sectionData:", sectionData);
 
   const mapSectionToContent = (sd) => {
-    let para1 = "",
-      para2 = "";
-    if (sd?.para) {
-      if (Array.isArray(sd.para)) {
-        para1 = sd.para[0] || "";
-        para2 = sd.para[1] || "";
-      } else {
-        para1 = sd.para || "";
-      }
-    }
+    console.log('🔍 ReportingServiceOverview mapping received:', sd);
+    
+    // Backend sends para1 and para2 directly, not as an array
+    const para1 = sd?.para1 || sd?.para?.[0] || "";
+    const para2 = sd?.para2 || sd?.para?.[1] || "";
 
-    return {
+    const mapped = {
       heading: sd?.heading || "Reporting Excellence",
       subHeading: sd?.subHeading || "Data-Driven Insights for Better Decisions",
       title: sd?.title || "Advanced Insights",
@@ -36,6 +31,9 @@ const ReportingServiceOverview = ({ sectionData, onSave, onBrowseLibrary }) => {
       para2,
       image: sd?.img || "./hero.png",
     };
+    
+    console.log('✅ ReportingServiceOverview mapped content:', mapped);
+    return mapped;
   };
 
   const [content, setContent] = useState(mapSectionToContent(sectionData));
@@ -137,7 +135,8 @@ const ReportingServiceOverview = ({ sectionData, onSave, onBrowseLibrary }) => {
                       heading: content.heading,
                       subHeading: content.subHeading,
                       title: content.title,
-                      para: [content.para1, content.para2].filter(Boolean),
+                      para1: content.para1,
+                      para2: content.para2,
                       img: content.image,
                     };
 

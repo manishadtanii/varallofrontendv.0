@@ -7,9 +7,20 @@ import "slick-carousel/slick/slick-theme.css";
 const WhatWeProvide = ({ data }) => {
   if (!data) return null;
   console.log("WhatWeProvide data:", data);
-  const { title, para, tagsLeft, tagsRight } = data;
-  console.log("Tags Left:", tagsLeft);
-  console.log("Tags Right:", tagsRight);
+  const { title, para, tagsLeft = [], tagsRight = [] } = data;
+  
+  // Normalize tags - handle both string and object formats
+  const normalizeTag = (tag) => {
+    if (typeof tag === 'string') return tag;
+    if (typeof tag === 'object' && tag.text) return tag.text;
+    return '';
+  };
+  
+  const normalizedTagsLeft = (tagsLeft || []).map(normalizeTag).filter(Boolean);
+  const normalizedTagsRight = (tagsRight || []).map(normalizeTag).filter(Boolean);
+  
+  console.log("Normalized Tags Left:", normalizedTagsLeft);
+  console.log("Normalized Tags Right:", normalizedTagsRight);
   const fadeUpVariant = {
     hidden: { opacity: 0, y: 40 },
     visible: (i = 1) => ({
@@ -80,7 +91,7 @@ const WhatWeProvide = ({ data }) => {
         custom={2}
       >
         <Slider {...marqueeSettings}>
-          {[...tagsLeft, ...tagsRight].map((service, index) => (
+          {[...normalizedTagsLeft, ...normalizedTagsRight].map((service, index) => (
             <div key={index} className="px-2">
               <motion.div
                 className="flex items-center gap-2 bg-white bg-opacity-10 px-10 py-5 rounded-2xl text-white whitespace-nowrap"
@@ -90,7 +101,7 @@ const WhatWeProvide = ({ data }) => {
                 viewport={{ once: true }}
               >
                 {/* <img src={service.icon} className="w-5" alt="" /> */}
-                <span className="capitalize">{service.text}</span>
+                <span className="capitalize">{service}</span>
               </motion.div>
             </div>
           ))}
@@ -107,7 +118,7 @@ const WhatWeProvide = ({ data }) => {
         custom={3}
       >
         <Slider {...reverseMarqueeSettings}>
-          {[...tagsRight, ...tagsLeft].map((service, index) => (
+          {[...normalizedTagsRight, ...normalizedTagsLeft].map((service, index) => (
             <div key={index} className="px-2">
               <motion.div
                 className="flex items-center gap-2 bg-white bg-opacity-10 px-10 py-5 rounded-2xl text-white whitespace-nowrap"
@@ -117,7 +128,7 @@ const WhatWeProvide = ({ data }) => {
                 viewport={{ once: true }}
               >
                 {/* <img src={service.icon} className="w-5" alt="" /> */}
-                <span className="capitalize">{service.text}</span>
+                <span className="capitalize">{service}</span>
               </motion.div>
             </div>
           ))}

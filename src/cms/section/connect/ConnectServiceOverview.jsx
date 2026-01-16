@@ -20,17 +20,19 @@ const ConnectServiceOverview = ({ sectionData, onSave, onBrowseLibrary }) => {
     let para1 = "",
       para2 = "";
     
-    // Handle both new format (para1, para2) and old format (para array)
-    if (sd?.para1 || sd?.para2) {
+    // Handle para array first (backend format)
+    if (sd?.para && Array.isArray(sd.para)) {
+      para1 = sd.para[0] || "";
+      para2 = sd.para[1] || "";
+    } 
+    // Fallback to para1/para2 fields if they exist
+    else if (sd?.para1 || sd?.para2) {
       para1 = sd?.para1 || "";
       para2 = sd?.para2 || "";
-    } else if (sd?.para) {
-      if (Array.isArray(sd.para)) {
-        para1 = sd.para[0] || "";
-        para2 = sd.para[1] || "";
-      } else {
-        para1 = sd.para || "";
-      }
+    }
+    // Last resort: handle string para
+    else if (sd?.para && typeof sd.para === 'string') {
+      para1 = sd.para;
     }
 
     return {

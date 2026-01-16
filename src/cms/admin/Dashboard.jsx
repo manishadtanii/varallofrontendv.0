@@ -1928,18 +1928,6 @@ const Dashboard = () => {
         } else if (sectionKey === 'verify-testimonials') {
           sectionKey = 'testimonials';
           console.log(`🔄 Converted "Verify Testimonials" → "testimonials"`);
-        } else if (sectionKey === 'service-overview' && activePage === 'services/tvg-verify') {
-          sectionKey = 'overview';
-          console.log(`🔄 Converted "Service Overview" → "overview"`);
-        } else if (sectionKey === 'what-we-offer' && activePage === 'services/tvg-verify') {
-          sectionKey = 'tvgEffect';
-          console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
-        } else if (sectionKey === 'what-we-provide' && activePage === 'services/tvg-verify') {
-          sectionKey = 'provide';
-          console.log(`🔄 Converted "What We Provide" → "provide"`);
-        } else if (sectionKey === 'testimonials' && activePage === 'services/tvg-verify') {
-          sectionKey = 'testimonials';
-          console.log(`🔄 Converted "Testimonials" → "testimonials"`);
         }
 
         // Reporting sections (new unique IDs)
@@ -1958,18 +1946,6 @@ const Dashboard = () => {
         } else if (sectionKey === 'reporting-testimonials') {
           sectionKey = 'testimonials';
           console.log(`🔄 Converted "Reporting Testimonials" → "testimonials"`);
-        } else if (sectionKey === 'service-overview' && activePage === 'services/tvg-reporting') {
-          sectionKey = 'overview';
-          console.log(`🔄 Converted "Service Overview" → "overview"`);
-        } else if (sectionKey === 'what-we-offer' && activePage === 'services/tvg-reporting') {
-          sectionKey = 'tvgEffect';
-          console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
-        } else if (sectionKey === 'what-we-provide' && activePage === 'services/tvg-reporting') {
-          sectionKey = 'provide';
-          console.log(`🔄 Converted "What We Provide" → "provide"`);
-        } else if (sectionKey === 'testimonials' && activePage === 'services/tvg-reporting') {
-          sectionKey = 'testimonials';
-          console.log(`🔄 Converted "Testimonials" → "testimonials"`);
         }
       }
 
@@ -2137,36 +2113,36 @@ const Dashboard = () => {
       if (sectionKey === 'agency-verify') {
         sectionKey = 'hero';
         console.log(`🔄 Converted "Agency Verify" → "hero"`);
-      } else if (sectionKey === 'service-overview' && activePage === 'services/tvg-verify') {
+      } else if (sectionKey === 'verify-service-overview') {
         sectionKey = 'overview';
-        console.log(`🔄 Converted "Service Overview" → "overview"`);
-      } else if (sectionKey === 'what-we-offer' && activePage === 'services/tvg-verify') {
+        console.log(`🔄 Converted "Verify Service Overview" → "overview"`);
+      } else if (sectionKey === 'verify-what-we-offer') {
         sectionKey = 'tvgEffect';
-        console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
-      } else if (sectionKey === 'what-we-provide' && activePage === 'services/tvg-verify') {
+        console.log(`🔄 Converted "Verify What We Offer" → "tvgEffect"`);
+      } else if (sectionKey === 'verify-what-we-provide') {
         sectionKey = 'provide';
-        console.log(`🔄 Converted "What We Provide" → "provide"`);
-      } else if (sectionKey === 'testimonials' && activePage === 'services/tvg-verify') {
+        console.log(`🔄 Converted "Verify What We Provide" → "provide"`);
+      } else if (sectionKey === 'verify-testimonials') {
         sectionKey = 'testimonials';
-        console.log(`🔄 Converted "Testimonials" → "testimonials"`);
+        console.log(`🔄 Converted "Verify Testimonials" → "testimonials"`);
       }
 
       // Reporting sections (new unique IDs)
       if (sectionKey === 'agency-reporting') {
         sectionKey = 'hero';
         console.log(`🔄 Converted "Agency Reporting" → "hero"`);
-      } else if (sectionKey === 'service-overview' && activePage === 'services/tvg-reporting') {
+      } else if (sectionKey === 'reporting-service-overview') {
         sectionKey = 'overview';
-        console.log(`🔄 Converted "Service Overview" → "overview"`);
-      } else if (sectionKey === 'what-we-offer' && activePage === 'services/tvg-reporting') {
+        console.log(`🔄 Converted "Reporting Service Overview" → "overview"`);
+      } else if (sectionKey === 'reporting-what-we-offer') {
         sectionKey = 'tvgEffect';
-        console.log(`🔄 Converted "What We Offer" → "tvgEffect"`);
-      } else if (sectionKey === 'what-we-provide' && activePage === 'services/tvg-reporting') {
+        console.log(`🔄 Converted "Reporting What We Offer" → "tvgEffect"`);
+      } else if (sectionKey === 'reporting-what-we-provide') {
         sectionKey = 'provide';
-        console.log(`🔄 Converted "What We Provide" → "provide"`);
-      } else if (sectionKey === 'testimonials' && activePage === 'services/tvg-reporting') {
+        console.log(`🔄 Converted "Reporting What We Provide" → "provide"`);
+      } else if (sectionKey === 'reporting-testimonials') {
         sectionKey = 'testimonials';
-        console.log(`🔄 Converted "Testimonials" → "testimonials"`);
+        console.log(`🔄 Converted "Reporting Testimonials" → "testimonials"`);
       }
     }
 
@@ -2624,7 +2600,7 @@ const Dashboard = () => {
 
 
             {/* Verify Toggle */}
-            {/* <div className="mb-2">
+            <div className="mb-2">
               <button
                 onClick={() => toggle("verify")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${activePage === "services/tvg-verify"
@@ -2670,11 +2646,11 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div> */}
+            </div>
 
 
             {/* Reporting Toggle */}
-            {/* <div className="mb-2">
+            <div className="mb-2">
               <button
                 onClick={() => toggle("reporting")}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border ${activePage === "services/tvg-reporting"
@@ -2720,7 +2696,7 @@ const Dashboard = () => {
                   ))}
                 </div>
               )}
-            </div> */}
+            </div>
 
             {/* Media Library Button */}
             <div className="mt-8 pt-6 border-t border-gray-800">
