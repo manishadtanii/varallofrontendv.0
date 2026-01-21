@@ -268,7 +268,7 @@ const AdminLogin = () => {
         {/* Right Section */}
         <div className="hidden md:block w-1/2 p-4">
           <div className="h-full w-full rounded-2xl overflow-hidden relative">
-            <img src="/admin-login.png" alt="Branding" className="w-full h-full object-cover" />
+            <img src="./admin-login.png" alt="Branding" className="w-full h-full object-cover" />
           </div>
         </div>
       </div>

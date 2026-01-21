@@ -8,65 +8,123 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import ResourcePortalModal from "./ResourcePortalModal";
+import { API_BASE_URL } from "../services/apiService";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [portalOpen, setPortalOpen] = useState(false);
+  const [visiblePages, setVisiblePages] = useState({});
   const location = useLocation();
 
-  const menuItems = [
-    {
-      name: "Home",
-      path: "/",
-      // submenu: [
-      //   { name: "Our Expertise", path: "/#our-expertise" },
-      //   { name: "Services", path: "/#services" },
-      //   { name: "Metrics", path: "/#metrics" },
-      //   { name: "Featured", path: "/#featured" },
-      //   { name: "Testimonials", path: "/#testimonials" },
-      //   { name: "Our Blog", path: "/#our-blog" },
-      // ],
-    },
-    {
-      name: "About Us",
-      path: "/about",
-      // submenu: [
-      //   { name: "Mission", path: "/about#mission" },
-      //   { name: "Vision", path: "/about#vision" },
-      //   { name: "Our Story", path: "/about#our-story" },
-      //   { name: "Our Founder", path: "/about#founder" },
-      //   { name: "Our Experts", path: "/about#team" },
-      // ],
-    },
+  // 🟢 NEW: Fetch visible pages on mount
+  useEffect(() => {
+    const fetchVisiblePages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/pages`);
+        const data = await response.json();
+        
+        if (data.data && Array.isArray(data.data)) {
+          const pageMap = {};
+          data.data.forEach((page) => {
+            pageMap[page.slug] = page.isPublished !== false;
+          });
+          console.log("✅ Header - Visible pages:", pageMap);
+          setVisiblePages(pageMap);
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch visible pages in Header:", error);
+        // Default: show all pages
+        setVisiblePages({
+          about: true,
+          contact: true,
+          services: true,
+          blog: true,
+        });
+      }
+    };
+
+    fetchVisiblePages();
+  }, []);
+
+  // 🟢 NEW: Listen for page visibility changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      console.log("📄 Pages visibility changed - refetching in Header...");
+      const fetchVisiblePages = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/pages`);
+          const data = await response.json();
+          
+          if (data.data && Array.isArray(data.data)) {
+            const pageMap = {};
+            data.data.forEach((page) => {
+              pageMap[page.slug] = page.isPublished !== false;
+            });
+            setVisiblePages(pageMap);
+          }
+        } catch (error) {
+          console.error("❌ Error refetching visible pages:", error);
+        }
+      };
+      fetchVisiblePages();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('pagesVisibilityChanged', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('pagesVisibilityChanged', handleStorageChange);
+    };
+  }, []);
+
+  const baseMenuItems = [
+    { name: "Home", path: "/", slug: "home" },
+    { name: "About Us", path: "/about", slug: "about" },
     {
       name: "Services",
       path: "/services",
+      slug: "services",
       submenu: [
-        { name: "TVG Management", path: "/services/tvg-management" },
-        { name: "TVG Stream", path: "/services/tvg-stream" },
-        { name: "TVG Books  ", path: "/services/tvg-books" },
-        { name: "TVG Connect", path: "/services/tvg-connect" },
-        { name: "TVG Verify", path: "/services/tvg-verify" },
-        // { name: "TVG Creative", path: "/services/tvg-creative" },
-        { name: "TVG Reporting", path: "/services/tvg-reporting" },
-        // { name: "TVG Command", path: "/services/tvg-command" },
+        { name: "TVG Management", path: "/services/tvg-management", slug: "tvg-management", parentSlug: "services" },
+        { name: "TVG Stream", path: "/services/tvg-stream", slug: "tvg-stream", parentSlug: "services" },
+        { name: "TVG Books", path: "/services/tvg-books", slug: "tvg-books", parentSlug: "services" },
+        { name: "TVG Connect", path: "/services/tvg-connect", slug: "tvg-connect", parentSlug: "services" },
+        { name: "TVG Verify", path: "/services/tvg-verify", slug: "tvg-verify", parentSlug: "services" },
+        { name: "TVG Reporting", path: "/services/tvg-reporting", slug: "tvg-reporting", parentSlug: "services" },
       ],
     },
-    // {
-    //   name: "Blog",
-    //   path: "/blog",
-    //   submenu: [
-    //     { name: "Trending Blogs", path: "/blog#trending-blogs" },
-    //     { name: "Latest Blogs", path: "/blog#latest-blogs" },
-    //     { name: "Popular Blogs", path: "/blog#popular-blogs" },
-    //   ],
-    // },
-    {
-      name: "Contact Us",
-      path: "/contact",
-    },
+    { name: "Contact Us", path: "/contact", slug: "contact" },
   ];
+
+  // 🟢 NEW: Filter menu items AND submenu items based on visibility
+  const menuItems = baseMenuItems.map((item) => {
+    // Home is always visible
+    if (item.slug === "home") return item;
+    
+    // If no slug, show it
+    if (!item.slug) return item;
+    
+    // Check if main menu item is visible
+    const isVisible = visiblePages[item.slug] !== false;
+    if (!isVisible) return null;
+    
+    // If has submenu, filter submenu items too
+    if (item.submenu) {
+      const filteredSubmenu = item.submenu.filter((sub) => {
+        // Check if service page is visible
+        return visiblePages[sub.slug] !== false;
+      });
+      
+      return {
+        ...item,
+        submenu: filteredSubmenu.length > 0 ? filteredSubmenu : [], // Keep empty array if all hidden
+      };
+    }
+    
+    return item;
+  }).filter(Boolean); // Remove null items
 
   const normalize = (p) => {
     if (!p) return "";

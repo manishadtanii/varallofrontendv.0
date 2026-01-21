@@ -2,13 +2,13 @@
 // CENTRALIZED API SERVICE - All Backend APIs in One File
 // ============================================================================
 
-export const API_BASE_URL = 
-  import.meta.env.VITE_FRONTEND_URL || 
-  import.meta.env.VITE_API_BASE || 
-  import.meta.env.VITE_BACKEND_URL || 
-  'https://varalobackendv-0.onrender.com/api';
+// export const API_BASE_URL = 
+//   import.meta.env.VITE_FRONTEND_URL || 
+//   import.meta.env.VITE_API_BASE || 
+//   import.meta.env.VITE_BACKEND_URL || 
+//   'https://varalobackendv-0.onrender.com/api';
 
-// export const API_BASE_URL = 'http://localhost:3000/api';
+export const API_BASE_URL = 'http://localhost:3000/api';
 
 // ============================================================================
 // PAGE APIs - Fetch Pages & Sections
@@ -72,6 +72,81 @@ export const pageAPI = {
       throw error;
     }
   },
+
+  /**
+   * 🟢 NEW: Get all pages with visibility status (admin only)
+   */
+  getAllPagesStatus: async () => {
+    try {
+      console.log('📋 Fetching all pages status...');
+      const token = localStorage.getItem('adminToken');
+      console.log('🔑 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
+      
+      if (!token) {
+        throw new Error('❌ No admin token found in localStorage. Please login first.');
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/pages/admin/pages-status`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ API Error:', errorData);
+        throw new Error(errorData.message || `HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Pages status fetched:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Error fetching pages status:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * 🟢 NEW: Toggle page visibility (admin only)
+   * @param {string} slug - Page slug
+   */
+  togglePageVisibility: async (slug) => {
+    try {
+      console.log(`🔄 Toggling visibility for page: ${slug}...`);
+      const token = localStorage.getItem('adminToken');
+      console.log('🔑 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
+      
+      if (!token) {
+        throw new Error('❌ No admin token found in localStorage. Please login first.');
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/pages/admin/toggle/${slug}`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ API Error:', errorData);
+        throw new Error(errorData.message || `HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Page visibility toggled:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Error toggling page visibility:', error);
+      throw error;
+    }
+  },
 };
 
 // ============================================================================
@@ -93,6 +168,14 @@ export const sectionAPI = {
       // Extract actual slug for service pages (tvg-stream from services/tvg-stream)
       const actualSlug = pageSlug.includes('/') ? pageSlug.split('/').pop() : pageSlug;
       console.log(`📄 Actual slug being used: ${actualSlug} (from ${pageSlug})`);
+
+      // 🔑 Get token BEFORE creating FormData
+      const token = localStorage.getItem('adminToken');
+      console.log('🔑 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
+      
+      if (!token) {
+        throw new Error('❌ No admin token found in localStorage. Please login first.');
+      }
 
       const formData = new FormData();
 
@@ -121,6 +204,9 @@ export const sectionAPI = {
         {
           method: 'PATCH',
           credentials: 'include',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
           body: formData,
         }
       );
@@ -128,6 +214,7 @@ export const sectionAPI = {
       const data = await response.json();
 
       if (!response.ok) {
+        console.error('❌ API Error:', data);
         throw new Error(data.message || 'Failed to update section');
       }
 

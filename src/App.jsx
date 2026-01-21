@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -20,8 +20,12 @@ import ForgotPassword from "./cms/admin/ForgotPassword";
 import ResetSuccess from "./cms/admin/ResetSuccess";
 import Dashboard from "./cms/admin/Dashboard";
 import ProtectedRoute from "./cms/components/ProtectedRoute";
+import { API_BASE_URL } from "./services/apiService";
 
 function App() {
+  const [visiblePages, setVisiblePages] = useState({});
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     AOS.init({
       duration: 1000, // Duration of each animation (ms)
@@ -30,23 +34,85 @@ function App() {
       mirror: false,
     });
   }, []);
+
   // Re-initialize whenever `data` changes
   useEffect(() => {
     AOS.refresh();
   });
+
+  // 🟢 NEW: Fetch pages visibility status - can be called multiple times
+  const fetchVisiblePages = async () => {
+    try {
+      console.log("📄 Fetching pages visibility status...");
+      const response = await fetch(`${API_BASE_URL}/pages`);
+      const data = await response.json();
+
+      if (data.data && Array.isArray(data.data)) {
+        // Build a map of visible pages
+        const pageMap = {};
+        data.data.forEach((page) => {
+          pageMap[page.slug] = page.isPublished !== false; // Default to true if not set
+        });
+        console.log("✅ Pages visibility map:", pageMap);
+        setVisiblePages(pageMap);
+      }
+    } catch (error) {
+      console.error("❌ Error fetching pages visibility:", error);
+      // Default: show all pages if API fails
+      setVisiblePages({
+        home: true,
+        about: true,
+        contact: true,
+        services: true,
+        blog: true,
+        "privacy-policy": true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load pages on mount
+  useEffect(() => {
+    fetchVisiblePages();
+  }, []);
+
+  // Helper to check if page is visible
+  const isPageVisible = (slug) => {
+    return visiblePages[slug] !== false; // Default to visible
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <Router>
       <ScrollToTop />
       <LayoutWrapper>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy-policy" element={<Privacy />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/services" element={<Service />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/services/:serviceId" element={<ServiceDetails />} />
-          <Route path="/blog/:id" element={<BlogDetails />} />
+          {isPageVisible("about") && <Route path="/about" element={<About />} />}
+          {isPageVisible("privacy-policy") && (
+            <Route path="/privacy-policy" element={<Privacy />} />
+          )}
+          {isPageVisible("contact") && <Route path="/contact" element={<Contact />} />}
+          {isPageVisible("services") && (
+            <>
+              <Route path="/services" element={<Service />} />
+              <Route path="/services/:serviceId" element={<ServiceDetails />} />
+            </>
+          )}
+          {isPageVisible("blog") && (
+            <>
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogDetails />} />
+            </>
+          )}
           <Route
             path="/thank-you"
             element={
@@ -80,7 +146,6 @@ function App() {
             }
           />
           <Route path="/admin/reset-success" element={<ResetSuccess />} />
-          // App.jsx
           <Route
             path="/admin/dashboard"
             element={

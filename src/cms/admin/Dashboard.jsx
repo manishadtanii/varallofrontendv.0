@@ -1242,6 +1242,7 @@ import ReportingServiceOverview from "../section/reporting/ReportingServiceOverv
 import ReportingWhatWeOffer from "../section/reporting/ReportingWhatWeOffer";
 import ReportingWhatWeProvide from "../section/reporting/ReportingWhatWeProvide";
 import ReportingTestimonials from "../section/reporting/ReportingTestimonials";
+import PagesManagement from "../components/PagesManagement";
 
 
 const Dashboard = () => {
@@ -1252,6 +1253,7 @@ const Dashboard = () => {
   const [cmsData, setCmsData] = useState({});
   const [loading, setLoading] = useState(true);
   const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+  const [pagesManagementOpen, setPagesManagementOpen] = useState(false);
   const [mediaMode, setMediaMode] = useState("view"); // "view" or "select"
   const [currentImageFieldName, setCurrentImageFieldName] = useState(null); // Track which field to populate
   const navigate = useNavigate();
@@ -1366,7 +1368,12 @@ const Dashboard = () => {
 
   // Toggle function to switch between pages
   const toggle = (pageName) => {
-    setActivePage(pageName);
+    // When opening Services dropdown, auto-select first item (A Support Company)
+    if (pageName === "service" && openMenu !== "service") {
+      setActivePage("services");
+      setActiveId("A Support Company");
+    }
+    
     setOpenMenu(openMenu === pageName ? null : pageName);
   };
 
@@ -2708,6 +2715,15 @@ const Dashboard = () => {
                 Media Library
               </button>
 
+              {/* 🟢 NEW: Pages Management Button */}
+              <button
+                onClick={() => setPagesManagementOpen(true)}
+                className="w-full mt-3 flex items-center justify-center gap-3 p-3 rounded-xl border bg-purple-500/10 text-purple-400 border-purple-500/30 hover:bg-purple-500/20 transition font-bold uppercase text-sm"
+              >
+                <HiOutlineViewGrid className="text-xl" />
+                Pages Management
+              </button>
+
               {/* Contact Submissions Button */}
               <button
                 onClick={() => {
@@ -2747,6 +2763,12 @@ const Dashboard = () => {
           toast.success("Image URL copied to clipboard!");
         }}
         onImageSelect={handleImageSelected}
+      />
+
+      {/* 🟢 NEW: Pages Management Modal */}
+      <PagesManagement
+        isOpen={pagesManagementOpen}
+        onClose={() => setPagesManagementOpen(false)}
       />
 
       {/* --- MAIN CONTENT AREA --- */}
