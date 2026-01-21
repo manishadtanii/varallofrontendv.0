@@ -60,9 +60,15 @@ const AdminLogin = () => {
         body: JSON.stringify({ email: email }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setStep(2);
         startTimer(); // Start timer on successful request
+        // 🔴 TESTING: Show OTP in alert
+        if (data.otp) {
+          alert(`🔐 Your OTP: ${data.otp}\n\nThis is for testing only. OTP also sent to email.`);
+        }
       } else {
         setError("Email is not verified");
       }
@@ -84,9 +90,14 @@ const AdminLogin = () => {
         credentials: 'include',
         body: JSON.stringify({ email: email }),
       });
+      const data = await response.json();
       if (response.ok) {
         startTimer(); // Restart timer
         setError("");
+        // 🔴 TESTING: Show OTP in alert
+        if (data.otp) {
+          alert(`🔐 OTP Resent: ${data.otp}\n\nOTP also sent to your email.`);
+        }
       }
     } catch (err) {
       setError("Resend failed");
