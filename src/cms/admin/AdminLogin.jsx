@@ -53,6 +53,7 @@ const AdminLogin = () => {
     setLoading(true);
     setError("");
     try {
+      console.log('🔐 Requesting OTP for email:', email);
       const response = await fetch(`${BASE_URL}/auth/admin/request-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,6 +62,8 @@ const AdminLogin = () => {
       });
 
       const data = await response.json();
+      console.log('📦 Response status:', response.status);
+      console.log('📦 Response data:', data);
 
       if (response.ok) {
         setStep(2);
@@ -68,12 +71,16 @@ const AdminLogin = () => {
         // 🔴 TESTING: Show OTP in alert
         if (data.otp) {
           alert(`🔐 Your OTP: ${data.otp}\n\nThis is for testing only. OTP also sent to email.`);
+        } else {
+          alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
         }
       } else {
-        setError("Email is not verified");
+        console.error('❌ Error response:', data);
+        setError(data.message || "Email is not verified");
       }
     } catch (err) {
-      setError("Email check failed");
+      console.error('❌ Catch error:', err);
+      setError(`Email check failed: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -84,6 +91,7 @@ const AdminLogin = () => {
     if (!canResend) return;
     setLoading(true);
     try {
+      console.log('🔄 Resending OTP for email:', email);
       const response = await fetch(`${BASE_URL}/auth/admin/request-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,16 +99,24 @@ const AdminLogin = () => {
         body: JSON.stringify({ email: email }),
       });
       const data = await response.json();
+      console.log('📦 Resend response:', data);
+      
       if (response.ok) {
         startTimer(); // Restart timer
         setError("");
         // 🔴 TESTING: Show OTP in alert
         if (data.otp) {
           alert(`🔐 OTP Resent: ${data.otp}\n\nOTP also sent to your email.`);
+        } else {
+          alert(`✅ OTP resent to your email.`);
         }
+      } else {
+        console.error('❌ Resend error:', data);
+        setError(data.message || "Resend failed");
       }
     } catch (err) {
-      setError("Resend failed");
+      console.error('❌ Resend catch error:', err);
+      setError(`Resend failed: ${err.message}`);
     } finally {
       setLoading(false);
     }
