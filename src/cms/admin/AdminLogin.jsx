@@ -63,15 +63,18 @@ const AdminLogin = () => {
 
       const data = await response.json();
       console.log('📦 Response status:', response.status);
-      console.log('📦 Response data:', data);
+      console.log('📦 Full Response data:', data);
+      console.log('📦 OTP value from response:', data.otp);
 
       if (response.ok) {
         setStep(2);
         startTimer(); // Start timer on successful request
-        // 🔴 TESTING: Show OTP in alert
+        // 🔴 TESTING: Show OTP in alert - ALWAYS show if exists
         if (data.otp) {
-          alert(`🔐 Your OTP: ${data.otp}\n\nThis is for testing only. OTP also sent to email.`);
+          console.log('✅ OTP received:', data.otp);
+          alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
         } else {
+          console.warn('⚠️ No OTP in response, checking email');
           alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
         }
       } else {
