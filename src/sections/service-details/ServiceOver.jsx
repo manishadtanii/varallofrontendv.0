@@ -4,7 +4,12 @@ import { motion } from "framer-motion";
 const ServiceOver = ({ data }) => {
    if (!data) return null;
   console.log("Service Over data:", data);
-  const { heading, img, para1, para2, subHeading } = data;
+  const { heading, img, para, title } = data;
+  console.log(title);
+  console.log(para);
+  console.log(img);
+  console.log(heading);
+
   return (
     <section className="bg-white">
       <div className="container-fluid">
@@ -50,7 +55,7 @@ const ServiceOver = ({ data }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                {subHeading}
+                {title}
               </motion.p>
             </div>
 
@@ -62,17 +67,17 @@ const ServiceOver = ({ data }) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3  }}
               >
-                {para1}
+                {para}
               </motion.p>
-            <motion.p
+            {/* <motion.p
                 className="md:mt-6 text-gray-700 text-base leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                {para2}
-              </motion.p>
+                {para}
+              </motion.p> */}
             </div>
           </motion.div>
         </div>

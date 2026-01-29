@@ -74,6 +74,8 @@ function ServiceDetails() {
     );
   }
 
+  console.log("Unboxed Service Details content:", content.overview);
+
   return (
     <div id="service-details" className="overflow-x-hidden">
       {/* Map unboxed data props to each child component */}
