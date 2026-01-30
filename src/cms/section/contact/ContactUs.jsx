@@ -289,11 +289,11 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
           </div>
 
           {/* --- SOCIAL ICONS --- */}
-          <div className="border-t border-gray-800 pt-6 mt-6">
-            <h3 className="text-sm font-bold text-cyan-400 mb-4">Social Media Icons</h3>
+          <div className=" border-gray-800 pt-6 mt-6">
+            {/* <h3 className="text-sm font-bold text-cyan-400 mb-4">Social Media Icons</h3> */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* LinkedIn Icon */}
-              <div className="flex flex-col gap-3">
+              {/* <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">LinkedIn Icon</label>
                   {isEditing && onBrowseLibrary && (
@@ -317,10 +317,10 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               {/* Facebook Icon */}
-              <div className="flex flex-col gap-3">
+              {/* <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <label className="text-[10px] text-gray-500 font-bold uppercase ml-1">Facebook Icon</label>
                   {isEditing && onBrowseLibrary && (
@@ -344,7 +344,7 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

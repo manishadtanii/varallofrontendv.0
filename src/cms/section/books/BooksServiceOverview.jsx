@@ -8,14 +8,14 @@ const BooksServiceOverview = ({ sectionData, onSave, onBrowseLibrary }) => {
   const [showReference, setShowReference] = useState(false);
   const fileInputRef = useRef(null);
     
-  console.log("📍 BooksServiceOverview sectionData:", sectionData);
+  console.log("📍 BooksServiceOverview sectionData:", sectionData.img);
 
   const [content, setContent] = useState({
     heading: sectionData?.heading || "Service Overview",
     subHeading: sectionData?.title || "Precision You Can Count On",
     para1: sectionData?.para1 || "Running a court reporting firm means juggling many balls, and finances shouldn't be the one that keeps you up at night. At TVG Books, we specialize in taking the weight of bookkeeping and reconciling off your shoulders with services built specifically for your industry.",
     para2: sectionData?.para2 || "Whether you're managing monthly invoices or prepping for year-end filing, we ensure your numbers stay clean, organized, and in control.",
-    mainImage: sectionData?.image?.url || "./services/books-over.png",
+    mainImage: sectionData?.img || "./services/books-over.png",
   });
 
   const handleChange = (e) => {
