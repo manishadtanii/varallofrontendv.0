@@ -72,10 +72,10 @@ const AdminLogin = () => {
         // 🔴 TESTING: Show OTP in alert - ALWAYS show if exists
         if (data.otp) {
           console.log('✅ OTP received:', data.otp);
-          alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
+          // alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
         } else {
           console.warn('⚠️ No OTP in response, checking email');
-          alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
+          // alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
         }
       } else {
         console.error('❌ Error response:', data);
@@ -109,9 +109,9 @@ const AdminLogin = () => {
         setError("");
         // 🔴 TESTING: Show OTP in alert
         if (data.otp) {
-          alert(`🔐 OTP Resent: ${data.otp}\n\nOTP also sent to your email.`);
+          console.log(`🔐 OTP Resent: ${data.otp}\n\nOTP also sent to your email.`);
         } else {
-          alert(`✅ OTP resent to your email.`);
+          console.log(`✅ OTP resent to your email.`);
         }
       } else {
         console.error('❌ Resend error:', data);
