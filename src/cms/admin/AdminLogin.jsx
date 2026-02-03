@@ -72,10 +72,10 @@ const AdminLogin = () => {
         // 🔴 TESTING: Show OTP in alert - ALWAYS show if exists
         if (data.otp) {
           console.log('✅ OTP received:', data.otp);
-          // alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
+          alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
         } else {
           console.warn('⚠️ No OTP in response, checking email');
-          // alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
+          alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
         }
       } else {
         console.error('❌ Error response:', data);
