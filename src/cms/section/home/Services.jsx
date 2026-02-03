@@ -135,6 +135,31 @@ const Services = ({ sectionData, onSave, onBrowseLibrary }) => {
     });
   };
 
+  const handleAddCard = () => {
+    const newCard = {
+      title: "New Service",
+      description: "Add description here",
+      image: "https://res.cloudinary.com/dh3dys6sf/image/upload/v1766654126/smart-8_qse95f_zdwowb.jpg",
+    };
+    setContent((prev) => ({
+      ...prev,
+      cards: [...prev.cards, newCard],
+    }));
+    toast.success("New card added!");
+  };
+
+  const handleDeleteCard = (index) => {
+    if (content.cards.length <= 1) {
+      toast.error("You must have at least one card!");
+      return;
+    }
+    setContent((prev) => ({
+      ...prev,
+      cards: prev.cards.filter((_, i) => i !== index),
+    }));
+    toast.success("Card deleted!");
+  };
+
   const handleSave = async () => {
     try {
       await onSave(content);
@@ -310,15 +335,36 @@ const Services = ({ sectionData, onSave, onBrowseLibrary }) => {
 
       {/* --- CARDS SECTION --- */}
       <div className="border-t border-gray-800 pt-8">
-        <h3 className="text-sm font-bold text-cyan-400 mb-4">Service Cards ({content.cards?.length})</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm font-bold text-cyan-400">Service Cards ({content.cards?.length})</h3>
+          {isEditing && (
+            <button
+              onClick={handleAddCard}
+              className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-black font-bold rounded-lg transition-all text-sm"
+            >
+              <HiOutlineViewGridAdd /> ADD CARD
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {content.cards?.map((card, index) => (
             <div
               key={index}
-              className={`bg-[#0b1318] border rounded-2xl p-4 flex flex-col gap-3 ${
+              className={`bg-[#0b1318] border rounded-2xl p-4 flex flex-col gap-3 relative ${
                 isEditing ? "border-cyan-400/30" : "border-gray-800"
               }`}
             >
+              {/* Delete Button */}
+              {isEditing && (
+                <button
+                  onClick={() => handleDeleteCard(index)}
+                  className="absolute top-2 left-2 bg-red-600 hover:bg-red-700 text-white p-2 rounded transition-colors"
+                  title="Delete Card"
+                >
+                  <HiOutlineX className="text-lg" />
+                </button>
+              )}
+
               {/* Card Image */}
               <div className="relative w-full h-40 bg-black rounded-lg overflow-hidden group">
                 <input

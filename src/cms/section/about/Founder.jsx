@@ -147,6 +147,8 @@ const Founder = ({ sectionData, onSave, onBrowseLibrary }) => {
     toast.success("Changes discarded");
   };
 
+  console.log("📍 Founder content state:", content.profile?.image?.url);
+
   return (
     <div className="flex flex-col gap-8 font-manrope">
       <Toaster />
@@ -267,7 +269,7 @@ const Founder = ({ sectionData, onSave, onBrowseLibrary }) => {
             {content.profile?.image?.url ? (
               <>
                 <img
-                  src={content.profile.image.url}
+                  src={content.profile?.image?.url}
                   alt={content.profile.image?.alt || "Founder"}
                   className="max-h-full object-contain p-4"
                 />

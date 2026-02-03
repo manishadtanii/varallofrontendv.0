@@ -3,8 +3,10 @@ import { motion } from "framer-motion";
 import { FaLinkedin, FaFacebook } from "react-icons/fa";
 
 function OurFounder({ data }) {
+  console.log("OurFounder data:", data.profile.image.url);
   if (!data) return null;
   const { name, para1, para2, profile, quote } = data;
+  console.log("OurFounder profile image URL:", profile?.image?.url);
   return (
     <section className="bg-btn relative md:py-32">
       <div className="image-bottom absolute left-0  top-0 w-32 md:w-60 h-32 md:h-60">
@@ -19,7 +21,7 @@ function OurFounder({ data }) {
             <img src="q-left.png" className="w-10" alt="" />
           </span>
           <p className="md:mb-20  text-p text-white">
-            {quote? quote.text : `Our team is the heart of The Varallo Group. They bring dedication, professionalism, and integrity to everything they do. I’m constantly inspired by their commitment to our clients and to each other. It's a privilege to work alongside such talented people who take real pride in delivering excellence every single day.`} <br />
+            {quote ? quote.text : `Our team is the heart of The Varallo Group. They bring dedication, professionalism, and integrity to everything they do. I’m constantly inspired by their commitment to our clients and to each other. It's a privilege to work alongside such talented people who take real pride in delivering excellence every single day.`} <br />
             {/* <span><i> — Nancy Varallo, Founder & Executive Director</i></span> */}
           </p>
 
@@ -63,7 +65,7 @@ function OurFounder({ data }) {
             </div>
             <div className="lg:absolute bottom-0 right-0 lg:w-[450px] mb-5 lg:mb-0">
               <img
-                src="founder.png"
+                src={profile?.image?.url}
                 className="w-full h-auto"
                 alt="Nancy Varallo"
               />
