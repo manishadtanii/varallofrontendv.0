@@ -137,6 +137,11 @@ function App() {
           />
           {/* Admin Login Route */}
           <Route path="/admin/login" element={<AdminLogin />} />
+          
+          {/* Forgot Password Route - No authentication required */}
+          <Route path="/admin/forgot-password" element={<ForgotPassword />} />
+          
+          {/* Change Password Route - Authentication required */}
           <Route
             path="/admin/change-password"
             element={

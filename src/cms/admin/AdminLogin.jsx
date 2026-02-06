@@ -281,6 +281,17 @@ const AdminLogin = () => {
               {error && step === 3 && <p className="text-red-600 text-xs mt-2 ml-4">{error}</p>}
             </div>
 
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <button
+                type="button"
+                onClick={() => navigate("/admin/forgot-password")}
+                className="text-cyan-400 hover:text-cyan-300 text-sm font-manrope transition-colors"
+              >
+                Forgot your password?
+              </button>
+            </div>
+
             {/* Final Sign In Button */}
             <button
               onClick={handleFinalLogin}
