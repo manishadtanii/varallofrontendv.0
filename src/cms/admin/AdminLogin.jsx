@@ -72,10 +72,10 @@ const AdminLogin = () => {
         // 🔴 TESTING: Show OTP in alert - ALWAYS show if exists
         if (data.otp) {
           console.log('✅ OTP received:', data.otp);
-          alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
+          // alert(`🔐 Your OTP: ${data.otp}\n\n⏱️ Valid for 10 minutes\n\nOTP also sent to: ${email}`);
         } else {
           console.warn('⚠️ No OTP in response, checking email');
-          alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
+          // alert(`✅ OTP sent to your email: ${email}\n\nCheck your inbox.`);
         }
       } else {
         console.error('❌ Error response:', data);
@@ -298,7 +298,7 @@ const AdminLogin = () => {
         {/* Right Section */}
         <div className="hidden md:block w-1/2 p-4">
           <div className="h-full w-full rounded-2xl overflow-hidden relative">
-            <img src="./admin-login.png" alt="Branding" className="w-full h-full object-cover" />
+            <img src="/adminlogin.png" alt="Branding" className="w-full h-full object-cover" />
           </div>
         </div>
       </div>
