@@ -3,6 +3,7 @@ import Arrow from "../../components/Arrow";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../services/apiService";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ForgotPassword = () => {
   const [timer, setTimer] = useState(0);
   const [canResend, setCanResend] = useState(false);
 
-  const BASE_URL = "http://localhost:3000/api/auth";
+  // const BASE_URL = "http://localhost:3000/api/auth";
 
   // Timer Logic
   useEffect(() => {
@@ -49,7 +50,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      const response = await fetch(`${BASE_URL}/admin/forgot-password/request-otp`, {
+      const response = await fetch(`${API_BASE_URL}/admin/forgot-password/request-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
