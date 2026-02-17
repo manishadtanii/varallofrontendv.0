@@ -1173,6 +1173,7 @@ import SectionEditor from "../components/SectionEditor"; // The component create
 import MediaLibraryModal from "../components/MediaLibraryModal";
 import ContactSubmissions from "../components/ContactSubmissions";
 import LoadingScreen from "../components/LoadingScreen";
+import ChangePasswordModal from "./ChangePasswordModal";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import {
@@ -1192,6 +1193,7 @@ import {
   HiOutlineUserCircle,
   HiOutlineInbox,
   HiOutlineLogout,      // Logout icon
+  HiOutlineCog,         // Settings icon for change password
 } from "react-icons/hi";
 // Import API Service
 import { pageAPI, sectionAPI, uploadAPI } from "../../services/apiService";
@@ -1254,6 +1256,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
   const [pagesManagementOpen, setPagesManagementOpen] = useState(false);
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   const [mediaMode, setMediaMode] = useState("view"); // "view" or "select"
   const [currentImageFieldName, setCurrentImageFieldName] = useState(null); // Track which field to populate
   const navigate = useNavigate();
@@ -2709,7 +2712,7 @@ const Dashboard = () => {
             <div className="mt-8 pt-6 border-t border-gray-800">
               <button
                 onClick={() => setMediaLibraryOpen(true)}
-                className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border bg-cyan-500/10 text-cyan-400 border-cyan-500/30 hover:bg-cyan-500/20 transition font-bold uppercase text-sm"
+                className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20 transition font-bold uppercase text-sm"
               >
                 <HiOutlineDatabase className="text-xl" />
                 Media Library
@@ -2734,6 +2737,15 @@ const Dashboard = () => {
               >
                 <HiOutlineInbox className="text-xl" />
                 Submissions
+              </button>
+
+              {/* Change Password Button */}
+              <button
+                onClick={() => setChangePasswordModalOpen(true)}
+                className="w-full mt-3 flex items-center justify-center gap-3 p-3 rounded-xl border bg-blue-500/10 text-blue-400 border-blue-500/30 hover:bg-blue-500/20 transition font-bold uppercase text-sm"
+              >
+                <HiOutlineCog className="text-xl" />
+                Change Password
               </button>
 
               {/* Logout Button */}
@@ -2769,6 +2781,12 @@ const Dashboard = () => {
       <PagesManagement
         isOpen={pagesManagementOpen}
         onClose={() => setPagesManagementOpen(false)}
+      />
+
+      {/* 🟢 NEW: Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={changePasswordModalOpen}
+        onClose={() => setChangePasswordModalOpen(false)}
       />
 
       {/* --- MAIN CONTENT AREA --- */}
