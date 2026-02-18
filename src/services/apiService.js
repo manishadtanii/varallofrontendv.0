@@ -170,7 +170,7 @@ export const sectionAPI = {
       const token = localStorage.getItem('adminToken');
       console.log('🔑 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
       
-      if (!token) {
+      if (!token) {                 
         throw new Error('❌ No admin token found in localStorage. Please login first.');
       }
 

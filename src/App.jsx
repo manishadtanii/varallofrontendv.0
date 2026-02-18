@@ -117,8 +117,8 @@ function App() {
             path="/thank-you"
             element={
               <ThankYouPage
-                title={"Thank you for filling the form!"}
-                message="We’ll send a confirmation email within 24 hours once you submit your request. If you haven’t received it by then, please contact our office to confirm we’ve received your scheduling request."
+                title={"Thank you for submitting your request."}
+                message="We'll send you a confirmation email within 24 business hours once you have submitted your request. If you do not receive a confirmation email, please call our office at (508) 753-9282 to confirm that we have received your request. "
                 btnText={"Go back to Home Page"}
                 btnLink={"/"}
               />

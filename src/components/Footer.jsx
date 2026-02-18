@@ -6,14 +6,14 @@ import ScrollToTopButton from "./ScrollToTopButton";
 
 export default function Footer() {
   return (
-    <footer className="bg-[url('https://the-varallo-group.vercel.app/footer-bg.jpg')] bg-cover bg-center text-white relative  overflow-hidden ">
+    <footer className="bg-[url('https://the-varallo-group.vercel.app/footer-bg.jpg')] bg-cover text-white relative  overflow-hidden " style={{ backgroundPosition: "center 0%" }}>
       <div className="container-fluid ">
-        <div className="max-w-full mx-auto sm:px-6 text-center">
+        <div className="max-w-full mx-auto sm:px-6 text-center ">
           {/* Heading */}
           <motion.h2
             className="text-h1 font-medium font-parkinsans mb-5 text-black"
             initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
@@ -32,7 +32,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Footer Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left mt-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left mt-20 pb-80">
             {/* Address Section */}
             <motion.div
               className="flex flex-col items-center md:items-start gap-2"
@@ -42,7 +42,7 @@ export default function Footer() {
               viewport={{ once: true }}
             >
               <img src="/logo-black.png" alt="Logo" className="w-40 mb-4" />
-              <p className="text-tertiary font-manrope text-xl md:mb-4 text-center md:text-left">
+              <p className="text-black font-manrope text-xl md:mb-4 text-center md:text-left">
                 <a href="">
                   34 Grafton Street, Suite 2 <br />
                   Millbury, MA 01527
