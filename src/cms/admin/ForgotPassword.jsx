@@ -50,7 +50,7 @@ const ForgotPassword = () => {
     setError("");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/forgot-password/request-otp`, {
+      const response = await fetch(`${API_BASE_URL}/auth/admin/forgot-password/request-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

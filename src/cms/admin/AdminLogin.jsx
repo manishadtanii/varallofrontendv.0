@@ -94,7 +94,7 @@ const AdminLogin = () => {
             </div>
 
             {/* Forgot Password Link */}
-            <div className="text-right">
+            {/* <div className="text-right">
               <button
                 type="button"
                 onClick={() => navigate("/admin/forgot-password")}
@@ -102,7 +102,7 @@ const AdminLogin = () => {
               >
                 Forgot your password?
               </button>
-            </div>
+            </div> */}
 
             {/* Sign In Button */}
             <button

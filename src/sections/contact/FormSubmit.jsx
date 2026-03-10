@@ -5,13 +5,13 @@ import { FiPhone, FiMail, FiClock, FiMapPin } from "react-icons/fi";
 import { FaLinkedin, FaFacebook, FaChevronDown } from "react-icons/fa";
 import Arrow from "../../components/Arrow";
 import Select from "react-select";
-import Form from "./FormSubmit";
+// import Form from "./FormSubmit";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../services/apiService";
 
 function FormSubmit() {
-  
+
   const [loading, setLoading] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
   const navigate = useNavigate();
@@ -31,207 +31,237 @@ function FormSubmit() {
     setSelectedServices(selected || []);
   };
   // ✅ handle form submit with fetch
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault(); // prevent normal page reload
+  //   setLoading(true);
+
+  //   const formData = new FormData(e.target);
+
+  //   // Append selected services (react-select doesn't put this in native form data)
+  //   if (selectedServices && selectedServices.length > 0) {
+  //     const values = selectedServices.map((s) => s.value);
+  //     formData.append("Services_Needed", JSON.stringify(values));
+  //   }
+
+  //   try {
+  //     // POST to our backend contact API
+  //     const response = await fetch(`${API_BASE_URL}/contacts`, {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     const data = await response.json();
+  //     console.log("Response:", data);
+
+  //     if (response.ok) {
+  //       navigate("/thank-you");
+  //       e.target.reset(); // clear form
+  //     } else {
+  //       alert(data.message || "Something went wrong!");
+  //     }
+  //   } catch (err) {
+  //     console.error("Error submitting form:", err);
+  //     alert("Error submitting form.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent normal page reload
-    setLoading(true);
+    e.preventDefault();
 
+    // Collect data using FormData
     const formData = new FormData(e.target);
-
-    // Append selected services (react-select doesn't put this in native form data)
-    if (selectedServices && selectedServices.length > 0) {
-      const values = selectedServices.map((s) => s.value);
-      formData.append("Services_Needed", JSON.stringify(values));
-    }
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      // POST to our backend contact API
-      const response = await fetch(`${API_BASE_URL}/contacts`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      console.log("Response:", data);
+      const response = await fetch(
+        "https://formsubmit.co/ajax/manishadtani99@gmail.com",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(data),
+        },
+      );
 
       if (response.ok) {
+        // Instead of alert, redirect to the thank you page
+        // window.location.href = "https://thevarallogroup.com/thank-you";
         navigate("/thank-you");
-        e.target.reset(); // clear form
-      } else {
-        alert(data.message || "Something went wrong!");
+        e.target.reset(); // Clear the form fields
       }
-    } catch (err) {
-      console.error("Error submitting form:", err);
-      alert("Error submitting form.");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Submission failed:", error);
     }
-  };
+}
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.6 },
+  }),
+};
+return (
+  <div className="w-full">
+    <motion.div
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1 }}
+      className=" bg-white rounded-2xl shadow-sm  md:p-8"
+    >
+      <h3 className="text-3xl font-semibold font-manrope text-center mb-2">
+        Schedule a deposition
+      </h3>
+      <p className="text-p lg:text-xl font-manrope text-center mb-6">
+        Once you submit your request, we’ll send a confirmation email within
+        24 hours. If you haven’t received it by then, please contact our
+        office to confirm we’ve received your scheduling request.
+      </p>
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, duration: 0.6 },
-    }),
-  };
-  return (
-    <div className="w-full">
-      <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1 }}
-        className=" bg-white rounded-2xl shadow-sm  md:p-8"
+      {/* Form */}
+      <motion.form
+        onSubmit={handleSubmit}
+        // encType="multipart/form-data"
+        // initial="hidden"
+        // whileInView="visible"
+        // viewport={{ once: true }}
+        // className="grid md:grid-cols-2 gap-6"
+        // enctype="multipart/form-data"
+        id="query-form"
       >
-        <h3 className="text-3xl font-semibold font-manrope text-center mb-2">
-          Schedule a deposition
-        </h3>
-        <p className="text-p lg:text-xl font-manrope text-center mb-6">
-          Once you submit your request, we’ll send a confirmation email within
-          24 hours. If you haven’t received it by then, please contact our
-          office to confirm we’ve received your scheduling request.
-        </p>
-
-        {/* Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid md:grid-cols-2 gap-6"
-          enctype="multipart/form-data"
-        >
-          {/* Prevent spam bots */}
-          <input type="hidden" name="_captcha" value="false" />
-          {/* Redirect after submission (optional) */}
+        {/* Prevent spam bots */}
+        <input type="hidden" name="_captcha" value="false" />
+        {/* Redirect after submission (optional) */}
+        <input
+          type="hidden"
+          name="_next"
+          value="https://thevarallogroup.com/thank-you"
+        />
+        {/* Firm Name */}
+        <motion.div custom={0} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl ">
+            First Name*
+          </label>
           <input
-            type="hidden"
-            name="_next"
-            value="https://thevarallogroup.com/thank-you"
+            type="text"
+            name="First_Name"
+            required
+            placeholder="Enter first name"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
           />
-          {/* Firm Name */}
-          <motion.div custom={0} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl ">
-              First Name*
-            </label>
-            <input
-              type="text"
-              name="First_Name"
-              required
-              placeholder="Enter first name"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        </motion.div>
 
-          {/* Attorney Name */}
-          <motion.div custom={1} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Attorney Name
-            </label>
-            <input
-              type="text"
-              name="Attorney_Name"
-              required
-              placeholder="Enter attorney name"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Attorney Name */}
+        <motion.div custom={1} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Attorney Name
+          </label>
+          <input
+            type="text"
+            name="Attorney_Name"
+            required
+            placeholder="Enter attorney name"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Contact Number */}
-          <motion.div custom={2} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Contact Number*
-            </label>
-            <input
-              type="text"
-              name="Contact_Number"
-              required
-              placeholder="Enter contact number"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Contact Number */}
+        <motion.div custom={2} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Contact Number*
+          </label>
+          <input
+            type="text"
+            name="Contact_Number"
+            required
+            placeholder="Enter contact number"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Contact Name */}
-          <motion.div custom={3} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Contact Name
-            </label>
-            <input
-              type="text"
-              name="Contact_Name"
-              required
-              placeholder="Enter contact name"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Contact Name */}
+        <motion.div custom={3} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Contact Name
+          </label>
+          <input
+            type="text"
+            name="Contact_Name"
+            required
+            placeholder="Enter contact name"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Contact Email */}
-          <motion.div
-            custom={4}
-            variants={fadeInUp}
-            className="md:col-span-2 mb-3"
-          >
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Contact Email Address*
-            </label>
-            <input
-              type="email"
-              name="Contact_Email"
-              required
-              placeholder="Enter email address"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Contact Email */}
+        <motion.div
+          custom={4}
+          variants={fadeInUp}
+          className="md:col-span-2 mb-3"
+        >
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Contact Email Address*
+          </label>
+          <input
+            type="email"
+            name="Contact_Email"
+            required
+            placeholder="Enter email address"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Section Title */}
-          <motion.h4
-            custom={5}
-            variants={fadeInUp}
-            className="md:col-span-2 font-bold text-p  font-manrope mt-4"
-          >
-            Proceeding Information
-          </motion.h4>
+        {/* Section Title */}
+        <motion.h4
+          custom={5}
+          variants={fadeInUp}
+          className="md:col-span-2 font-bold text-p  font-manrope mt-4"
+        >
+          Proceeding Information
+        </motion.h4>
 
-          {/* Preferred Date */}
-          <motion.div custom={6} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Preferred Date
-            </label>
-            <input
-              type="date"
-              name="Preferred_Date"
-              required
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Preferred Date */}
+        <motion.div custom={6} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Preferred Date
+          </label>
+          <input
+            type="date"
+            name="Preferred_Date"
+            required
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Preferred Time */}
-          <motion.div custom={7} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Preferred Time
-            </label>
-            <input
-              type="time"
-              name="Preferred_Time"
-              required
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Preferred Time */}
+        <motion.div custom={7} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Preferred Time
+          </label>
+          <input
+            type="time"
+            name="Preferred_Time"
+            required
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* State */}
-          <motion.div custom={8} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              State
-            </label>
-            <input
-              type="text"
-              name="State"
-              placeholder="Enter state"
-              required
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-            {/* <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+        {/* State */}
+        <motion.div custom={8} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            State
+          </label>
+          <input
+            type="text"
+            name="State"
+            placeholder="Enter state"
+            required
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+          {/* <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
               Select State
             </label>
             <div className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl">
@@ -239,21 +269,21 @@ function FormSubmit() {
                 <option>Select State</option>
               </select>
             </div> */}
-          </motion.div>
+        </motion.div>
 
-          {/* City */}
-          <motion.div custom={9} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              City
-            </label>
-            <input
-              type="text"
-              name="City"
-              placeholder="Enter city"
-              required
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-           {/*  <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+        {/* City */}
+        <motion.div custom={9} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            City
+          </label>
+          <input
+            type="text"
+            name="City"
+            placeholder="Enter city"
+            required
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+          {/*  <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
               Select City*
             </label>
             <div className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl">
@@ -261,101 +291,101 @@ function FormSubmit() {
                 <option>Select City</option>
               </select>
             </div> */}
-          </motion.div>
+        </motion.div>
 
-          {/* Witness */}
-          <motion.div custom={10} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Witness(es)*
-            </label>
-            <input
-              type="text"
-              name="Witnesses"
-              required
-              placeholder="Enter witness(es)"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Witness */}
+        <motion.div custom={10} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Witness(es)*
+          </label>
+          <input
+            type="text"
+            name="Witnesses"
+            required
+            placeholder="Enter witness(es)"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Estimated Duration */}
-          <motion.div custom={11} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Estimated Duration
-            </label>
-            <input
-              type="text"
-              name="estimated_duration"
-              required
-              placeholder="Enter duration"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* Estimated Duration */}
+        <motion.div custom={11} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Estimated Duration
+          </label>
+          <input
+            type="text"
+            name="estimated_duration"
+            required
+            placeholder="Enter duration"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Services Needed */}
-          <motion.div custom={12} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Services Needed*
-            </label>
-            {/* <input
+        {/* Services Needed */}
+        <motion.div custom={12} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Services Needed*
+          </label>
+          {/* <input
                   type="text"
                   name="services_needed"
                   placeholder="Enter services needed"
                   className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
                 /> */}
-            {/* <MultiSelectDropdown
+          {/* <MultiSelectDropdown
                   options={options}
                   title="Select Services"
                   onChange={handleSelectionChange}
                 /> */}
-            {/* <MultiSelect options={options} /> */}
-            <Select
-              defaultValue={[]}
-              isMulti
-              value={selectedServices}
-              onChange={handleSelectionChange}
-              name="Services_Needed"
-              required
-              options={options}
-              className="basic-multi-select border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-              classNamePrefix="select"
-            />
-          </motion.div>
+          {/* <MultiSelect options={options} /> */}
+          <Select
+            defaultValue={[]}
+            isMulti
+            value={selectedServices}
+            onChange={handleSelectionChange}
+            name="Services_Needed"
+            required
+            options={options}
+            className="basic-multi-select border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+            classNamePrefix="select"
+          />
+        </motion.div>
 
-          {/* File Upload */}
-          <motion.div custom={13} variants={fadeInUp} className="mb-3">
-            <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
-              Upload File
-            </label>
-            <input
-              type="file"
-              name="File"
-              className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
-            />
-          </motion.div>
+        {/* File Upload */}
+        <motion.div custom={13} variants={fadeInUp} className="mb-3">
+          <label className="block font-manrope mb-2 font-bold text-base md:text-xl">
+            Upload File
+          </label>
+          <input
+            type="file"
+            name="File"
+            className="border font-manrope rounded-lg px-4 py-3 w-full bg-[#F2F2F2] text-xl"
+          />
+        </motion.div>
 
-          {/* Submit Button */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            type="submit"
-            className=""
-          >
-            <button className="main-btn flex font-manrope text-white">
-              <div className="text bg-secondary text-base lg:text-lg leading-10 py-1 px-6 lg:leading-[40px] rounded-[50px]">
-                Send Request
-              </div>
-              <Arrow customClass="bg-secondary -rotate-45 " />
-            </button>
-            {/* <Button
+        {/* Submit Button */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          type="submit"
+          className=""
+        >
+          <button className="main-btn flex font-manrope text-white">
+            <div className="text bg-secondary text-base lg:text-lg leading-10 py-1 px-6 lg:leading-[40px] rounded-[50px]">
+              Send Request
+            </div>
+            <Arrow customClass="bg-secondary -rotate-45 " />
+          </button>
+          {/* <Button
                   text="Start a Conversation"
                   color={"text-white"}
                   arrowClass="d"
                 /> */}
-          </motion.div>
-        </motion.form>
-      </motion.div>
-    </div>
-  );
+        </motion.div>
+      </motion.form>
+    </motion.div>
+  </div>
+);
 }
 
 export default FormSubmit;
