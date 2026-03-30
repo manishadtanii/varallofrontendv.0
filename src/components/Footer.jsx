@@ -96,7 +96,7 @@ export default function Footer() {
                 </h4>
                 <div className="flex space-x-4">
                   <motion.a
-                    href="https://www.facebook.com/profile.php?id=100057624812642"
+                    href="https://www.facebook.com/thevarallogroup/about"
                     target="_blank"
                     rel="noopener noreferrer"
                     initial={{ scale: 1 }}

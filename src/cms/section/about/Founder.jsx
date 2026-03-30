@@ -47,7 +47,7 @@ const Founder = ({ sectionData, onSave, onBrowseLibrary }) => {
     },
     socialLinks: sectionData?.socialLinks || [
       { platform: "linkedin", url: "https://www.linkedin.com/in/nancy-varallo" },
-      { platform: "facebook", url: "https://www.facebook.com/nancy-varallo" },
+      { platform: "facebook", url: "https://www.facebook.com/thevarallogroup/about" },
     ],
   });
 
@@ -140,7 +140,7 @@ const Founder = ({ sectionData, onSave, onBrowseLibrary }) => {
       },
       socialLinks: sectionData?.socialLinks || [
         { platform: "linkedin", url: "https://www.linkedin.com/in/nancy-varallo" },
-        { platform: "facebook", url: "https://www.facebook.com/nancy-varallo" },
+        { platform: "facebook", url: "https://www.facebook.com/thevarallogroup/about" },
       ],
     });
     setIsEditing(false);

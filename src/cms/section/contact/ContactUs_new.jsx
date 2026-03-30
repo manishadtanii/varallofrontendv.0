@@ -59,7 +59,7 @@ const ContactUs = ({ sectionData, onSave }) => {
       emailMarketing,
       emailGeneralText,
       emailGeneral,
-      faceBookLink: socialLinks[1]?.url || "https://www.facebook.com/",
+      faceBookLink: socialLinks[1]?.url || "https://www.facebook.com/thevarallogroup/about",
       linkedinLink: socialLinks[0]?.url || "https://www.linkedin.com/",
       mapLink: map.embedUrl || "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5912.049902837201!2d-71.746638!3d42.192534!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89e40f9a42b7bfe5%3A0x3178cc10b1995a2!2s34%20Grafton%20St%2C%20Millbury%2C%20MA%2001527!5e0!3m2!1sen!2sus!4v1767883263142!5m2!1sen!2sus",
     };

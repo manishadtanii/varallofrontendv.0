@@ -84,7 +84,7 @@ const ContactUs = ({ sectionData, onSave, onBrowseLibrary }) => {
       emailMarketing,
       emailGeneralText,
       emailGeneral,
-      faceBookLink: sd.faceBookLink || socialLinks[1]?.url || "https://www.facebook.com/",
+      faceBookLink: sd.faceBookLink || socialLinks[1]?.url || "https://www.facebook.com/thevarallogroup/about",
       faceBookIcon: sd.faceBookIcon || socialLinks[1]?.icon || "https://res.cloudinary.com/dh3dys6sf/image/upload/v1766654114/facebook-icon.png",
       linkedinLink: sd.linkedinLink || socialLinks[0]?.url || "https://www.linkedin.com/",
       linkedinIcon: sd.linkedinIcon || socialLinks[0]?.icon || "https://res.cloudinary.com/dh3dys6sf/image/upload/v1766654114/linkedin-icon.png",
